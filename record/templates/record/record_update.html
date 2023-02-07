@@ -1,0 +1,9 @@
+{% extends 'record/base.html' %}
+
+{% block content %}
+    <h1>記録の編集</h1>
+    <form method="POST" class="record-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">保存</button>
+    </form>
+{% endblock %}

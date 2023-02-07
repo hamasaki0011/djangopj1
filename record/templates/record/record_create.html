@@ -1,0 +1,10 @@
+{% extends 'record/base.html' %}
+
+{% block content %}
+    <h2>新しい記録</h2>
+    <form method="POST" class="record-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">保存</button>
+    </form>
+
+{% endblock %}

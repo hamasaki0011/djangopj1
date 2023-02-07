@@ -1,0 +1,13 @@
+{% extends 'record/base.html' %}
+
+{% block content %}
+        {% for record in record_list %}
+        <div class="record">
+                <div class="date">
+                    <p>published: {{ record.published_date }}</p>
+                </div>
+                <h2><a href="{% url 'record_detail' record.pk %}">{{ record.title }}</a></h2>
+                <p>{{ post.text|linebreaksbr }}</p>
+            </div>
+        {% endfor %}
+{% endblock %}

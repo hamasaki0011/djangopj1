@@ -5,10 +5,10 @@ from django.utils import timezone
 
 class Record(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    title=models.CharField(verbose_name='タイトル', max_length=200)
-    text=models.TextField(verbose_name='本文')
-    created_at=models.DateTimeField(verbose_name='作成日時', default=timezone.now)
-    puvlisheded_at=models.DateTimeField(verbose_name='公開日時', blank=True, null=True)
+    title=models.CharField(verbose_name='標題',max_length=200)
+    text=models.TextField(verbose_name='記事')
+    created_date=models.DateTimeField(default=timezone.now)
+    published_date=models.DateTimeField(blank=True, null=True)
 
     def publish(self):
         self.published_date = timezone.now()

@@ -1,0 +1,26 @@
+{% load static %}
+<html>
+    <head>
+        <title>My First WEB application</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="{% static 'css/record.css' %}">
+    </head>
+
+    <body>
+        <div class="page-header">
+            <a href="{% url 'record_create' %}" class="top-menu">新規作成<span class="glyphicon glyphicon-plus"></span></a>
+            <h1><a href="/">遠隔監視システム</a></h1>
+        </div>
+        <div class="content container">
+            <div class="row">
+                <div class="col-md-8">
+                {% block content %}
+                <!-- この中に各HTMLのbodyがはいる -->
+                {% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
