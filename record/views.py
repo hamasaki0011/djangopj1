@@ -65,3 +65,13 @@ class RecordDeleteView(DeleteView):
     model = Record
     success_url = reverse_lazy('record_list')
     
+class RecordArticleView(TemplateView):
+    template_name='record/record_article.html'
+    
+class RecordPythonView(TemplateView):
+    template_name='record/record_python.html'
+    
+class RecordServerView(TemplateView):
+    template_name='record/record_server.html'
+
+    

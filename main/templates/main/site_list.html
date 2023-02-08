@@ -1,0 +1,19 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<div>
+    <h3>遠隔監視対象サイト一覧：</h3>
+    <a class="btn btn-default" href="/"><span class="glyphicon glyphicon-backward"></span> TOP頁に戻る</a>
+    {% for location in location_list %}
+        <div class="main">
+            <div class="date">
+                <p>更新日: {{ location.updated_date }}</p>
+            </div>
+            <h4>
+                <a href="{% url 'main:site_detail' location.pk %}">{{ location.name }}</a>
+                <span>  (メモ){{ location.memo }}</span>
+            </h4>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

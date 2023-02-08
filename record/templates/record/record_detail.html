@@ -1,6 +1,7 @@
 {% extends 'record/base.html' %}
 
 {% block content %}
+<big><p><a href="{% url 'record_create' %}"><span class="glyphicon glyphicon-plus"></span>新規作成</a></p></big>
 <div class="record">
     <h3>＜標題＞「{{ record.title }}」</h3>
     <div>

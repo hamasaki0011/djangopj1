@@ -1,0 +1,73 @@
+{% load static %}	
+<!DOCTYPE html>
+<html lang="jp">
+    <head>
+        <meta charset="UTF-8">
+        <title>Remmote monitoring</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+
+        <!-- レスポンシブ対応: 端末にあわせて柔軟に表示する（ハズ） -->
+        <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+        <!-- Micrsoft IE対応 インストールされている最新のバージョンで表示する-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+        <!-- jQueryのスクリプト -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+        <!-- JAVAscriptの外部ソース -->
+        <!-- <script type="text/javascript" src="{% static 'script.js' %}"></script> -->
+        
+        <!-- Plotly用のscriptを準備 -->
+        <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>遠隔監視システム</h1>
+            <h5><span>現在時刻: </span><span id="realtime"></span></h5>
+            <script>
+                function twoDigit(num) {
+                    let ret;
+                    if (num < 10)
+                        ret = "0" + num;
+                    else
+                        ret = num;
+                    return ret;
+                }
+        
+                function showClock() {
+                    let now = new Date();
+                    let year = now.getFullYear();
+                    let month = now.getMonth() + 1;
+                    let date = now.getDate();
+                    let week = now.getDay();
+                    let wd = ['日', '月', '火', '水', '木', '金', '土'];
+                    let nowHour = twoDigit(now.getHours());
+                    let nowMin = twoDigit(now.getMinutes());
+                    let nowSec = twoDigit(now.getSeconds());
+                    let msgDate = year + '年' + month + '月' + date+ '日'+ '(' + wd[week] + ')';
+                    let msgTime = "" + nowHour + ":" + nowMin + ":" + nowSec;
+                    //document.getElementById("date").innerHTML = year + '年' + month + '月' + date+ '日';
+                    //target0 = document.getElementById("today");
+                    //target0.innerHTML = '今日は　' + msgDate;
+                    //target1 = document.getElementById("now");
+                    //target1.innerHTML = '現在時刻　' + msgTime;
+                    target = document.getElementById("realtime");
+                    target.innerHTML =msgDate + ' ' + msgTime;
+                }
+                setInterval('showClock()', 1000);
+            </script>
+        </div>
+        <div class="content container">
+            <div class="row">
+                <div class="col-md-8">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </body>
+</html>

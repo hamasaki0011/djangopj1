@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<h2>さて、何を始めますか？</h2>
+<div>
+    <h3>■遠隔監視サイトを表示する</h3>
+    <h4>
+        <a class="btn btn-default" href="{% url 'main:site_list' %}"><span class="glyphicon glyphicon-list"></span> サイト一覧を表示する</a>
+    </h4>
+</div>
+<div>
+    <h3>■システムを管理する</h3>
+    <h4>　遠隔監視サイトを設定する</h4>
+    <h4>　センサーの全体一覧を表示する</h4>
+</div>
+<div>
+    <h3>■システム開発の記録を閲覧する</h3>
+    <h4>
+        <a class="btn btn-default" href="{% url 'record_list' %}"><span class="glyphicon glyphicon-list-alt"></span> 記事一覧を表示する</a>
+    </h4>
+    <h4>
+        <a  class="btn btn-default" href="{% url 'record_create' %}"><span class="glyphicon glyphicon-pencil"></span> 新しく記事を記録する</a>
+    </h4>
+    <h4>
+        <a  class="btn btn-default" href="{% url 'record_article' %}"><span class="glyphicon glyphicon-book"></span> 関連する参考記事を閲覧する</a>
+    </h4>
+</div>
+{% endblock %}
