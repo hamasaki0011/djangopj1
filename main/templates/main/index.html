@@ -15,13 +15,13 @@
 <div>
     <h3>■システム開発の記録を閲覧する</h3>
     <h4>
-        <a class="btn btn-default" href="{% url 'record_list' %}"><span class="glyphicon glyphicon-list-alt"></span> 記事一覧を表示する</a>
+        <a class="btn btn-default" href="{% url 'record:record_list' %}"><span class="glyphicon glyphicon-list-alt"></span> 記事一覧を表示する</a>
     </h4>
     <h4>
-        <a  class="btn btn-default" href="{% url 'record_create' %}"><span class="glyphicon glyphicon-pencil"></span> 新しく記事を記録する</a>
+        <a  class="btn btn-default" href="{% url 'record:record_create' %}"><span class="glyphicon glyphicon-pencil"></span> 新しく記事を記録する</a>
     </h4>
     <h4>
-        <a  class="btn btn-default" href="{% url 'record_article' %}"><span class="glyphicon glyphicon-book"></span> 関連する参考記事を閲覧する</a>
+        <a  class="btn btn-default" href="{% url 'record:record_article' %}"><span class="glyphicon glyphicon-book"></span> 関連する参考記事を閲覧する</a>
     </h4>
 </div>
 {% endblock %}
