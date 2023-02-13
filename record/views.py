@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
-
 # Create your views here.
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Record
@@ -11,59 +11,55 @@ class RecordListView(ListView):
     template_name='record/record_list.html'
     model=Record
     
+    def get_queryset(self):
+        qs = Record.objects.all()
+        # ユーザーがログインしていれば、リストを表示する
+        # q = self.request.GET.get("search")
+        # qs = Record.objects.search(query=q)
+        # if self.request.user.is_authenticated:
+        #     qs = qs.filter(Q(public=True)|Q(user=self.request.user))
+        # else:
+        #     qs = qs.filter(public=True)
+        
+        # the selected records sre reordered  by "published_date"         
+        qs = qs.order_by("-published_date")[:7]
+        return qs
+    
 class RecordDetailView(DetailView):
     template_name='record/record_detail.html'
     model=Record
 
-def record_create(request):
-    if request.method == "POST":
-        form = RecordForm(request.POST)
-        if form.is_valid():
-            record = form.save(commit=False)
-            record.author = request.user
-            record.published_date = timezone.now()
-            record.save()
-            return redirect('record_detail', pk=record.pk)
-    else:
-        form = RecordForm()
-    return render(request, 'record/record_create.html', {'form': form})
-
-# class RecordCreateView(CreateView):
-#     template_name='record_create.html'
-#     form_class=RecordForm
-#     success_url=reverse_lazy('record:record_create_complete')
-
-def record_update(request,pk):
-    record = get_object_or_404(Record, pk=pk)   
-    # 編集対象のpkをrequestとともに受け取り、pkで該当するページを生成する。
-    if request.method == "POST":
-        form = RecordForm(request.POST,instance=record)
-        if form.is_valid():
-            record = form.save(commit=False)
-            record.author = request.user
-            record.published_date = timezone.now()
-            record.save()
-            return redirect('record_detail', pk=record.pk)
-    else:
-        form = RecordForm(instance=record)
-    return render(request, 'record/record_update.html', {'form': form})
-
-# class RecordUpdateView(UpdateView):
-#     template_name = 'record_update.html'
-#     model = Record
-#     fields = ('date', 'title', 'text',)
-#     success_url = reverse_lazy('record/record_list')
+class RecordUpdateView(LoginRequiredMixin,UpdateView):
+    template_name = 'record/record_update.html'
+    model = Record
+    #form_class=RecordForm
+    fields = ('title', 'text',)
+    success_url = reverse_lazy('record:record_list')
  
-#     def form_valid(self, form):
-#         record = form.save(commit=False)
-#         record.updated_at = timezone.now()
-#         record.save()
-#         return super().form_valid(form)
+    def form_valid(self, form):
+        record = form.save(commit=False)
+        record.author = self.request.user
+        record.published_date = timezone.now()
+        record.save()
+        return super().form_valid(form)
+
+class RecordCreateView(LoginRequiredMixin,CreateView):
+    template_name='record/record_create.html'
+    form_class=RecordForm
+    success_url=reverse_lazy('record:record_list')
     
-class RecordDeleteView(DeleteView):
+    def form_valid(self, form):
+        record = form.save(commit=False)
+        record.author = self.request.user
+        record.published_date = timezone.now()
+        record.save()
+        return super().form_valid(form)
+ 
+class RecordDeleteView(LoginRequiredMixin,DeleteView):
     template_name = 'record/record_delete.html'
     model = Record
-    success_url = reverse_lazy('record_list')
+    # form_class=RecordForm
+    success_url = reverse_lazy('record:record_list')
     
 class RecordArticleView(TemplateView):
     template_name='record/record_article.html'

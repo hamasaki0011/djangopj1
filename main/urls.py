@@ -8,7 +8,6 @@ urlpatterns=[
     # Site arrangement view
     path('main/', views.SiteListView.as_view(), name='site_list'),
     path('main/<int:pk>/', views.SiteDetailView.as_view(), name='site_detail'),
-    
     path('main/', views.SiteCreateView.as_view(), name='site_create'),
     
     # path('index/', views.IndexView.as_view(), name='index'),

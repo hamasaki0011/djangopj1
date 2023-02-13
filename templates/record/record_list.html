@@ -7,7 +7,7 @@
             <div class="date">
                 <p>published: {{ record.published_date }}</p>
             </div>
-            <h2><a href="{% url 'record:record_detail' record.pk %}">{{ record.title }}</a></h2>
+            <h4><a href="{% url 'record:record_detail' record.pk %}">{{ record.title }}</a></h4>
             <p>{{ record.text|linebreaksbr }}</p>
         </div>
     {% endfor %}

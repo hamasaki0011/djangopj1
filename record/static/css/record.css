@@ -1,5 +1,5 @@
 .page-header {
-    background-color: #ee420e;
+    background-color: #0eee5960;
     margin-top: 0;
     padding: 20px 20px 20px 40px;
 }
@@ -41,4 +41,8 @@ h1, h2, h3, h4 {
 .record h2 a, .record h2 a:visited {
     color: #000000;
 }
+.record h4 a, .record h4 a:visited {
+    color: #f80707;
+}
+
 

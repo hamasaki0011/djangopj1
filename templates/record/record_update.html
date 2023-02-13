@@ -1,7 +1,7 @@
 {% extends 'record/base.html' %}
 
 {% block content %}
-<big><p><a href="{% url 'record_create' %}"><span class="glyphicon glyphicon-plus"></span>新規作成</a></p></big>
+<big><p><a href="{% url 'record:record_create' %}"><span class="glyphicon glyphicon-plus"></span>新規作成</a></p></big>
     <h1>記録の編集</h1>
     <form method="POST" class="record-form">{% csrf_token %}
         {{ form.as_p }}
