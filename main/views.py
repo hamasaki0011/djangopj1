@@ -30,7 +30,7 @@ import time
 
 
 # directory to store the uploading files
-UPLOAD_DIR = os.path.join(os.path.dirname(__file__), '../static/upload/')
+# UPLOAD_DIR = os.path.join(os.path.dirname(__file__), '../static/upload/')
 # Define debug log-file
 # logger = logging.getLogger('development')
 
