@@ -1,4 +1,7 @@
-{% extends 'main/base.html' %}
+{% extends 'main/main_base.html' %}
+
+{% block title %}遠隔監視対象を削除{% endblock %}
+
 {% block content %}
 
     <h1>削除確認</h1>
@@ -7,9 +10,4 @@
         <input type="submit" value="削除実行">
     </form>
     <br>
-    <div>
-        <a  class="btn btn-default" href="{% url 'record:record_create' %}"><span class="glyphicon glyphicon-pencil"></span> 開発記録を作成</a>
-        <a class="btn btn-default" href="{% url 'record:record_list' %}"><span class="glyphicon glyphicon-list-alt"></span> 開発記録一覧を表示</a>
-    </div>
-
 {% endblock %}

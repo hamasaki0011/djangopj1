@@ -1,0 +1,46 @@
+<!-- <nav class="navbar navbar-dark bg-primary"> -->
+<nav class="navbar navbar-light" style="background-color: #1c83e2;">
+  <div class="container-fluid">
+    <div>
+      <a class="navbar-brand" href="{% url 'main:index' %}">
+        <!-- <img src="/media/pages/rmt_icon.png" style="width:50px;"/> -->
+        <i class="bi bi-bootstrap-fill" style="font-size: 2rem;"></i>
+      </a>
+      <!-- ナビ左上のトグルボタン -->
+      <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button> -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <!-- <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li> -->
+          <!-- <li class="nav-item"><a class="nav-link" href="#">Link</a></li> -->
+        </ul>
+      </div>
+    
+    </div>
+    <div class="flex-grow-1" style="max-width:350px;">
+      <form class="d-flex" method="GET">
+        <input class="form-control me-2" type="search" placeholder="検索..." aria-label="Search" name="search">
+        <button class="btn btn-outline-light" type="submit">検索</button>
+      </form>
+    </div>
+    <div class="text-light nav-item dropdown">
+      <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+      <ul class="dropdown-menu endposition" aria-labelledby="navbarDropdown">
+        {% if request.user.is_authenticated %}
+            <li><a class="dropdown-item" href="#">アカウント設定</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">ログアウト</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'record:record_list' %}">開発記録一覧</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'record:record_create' %}">開発記録作成</a></li>
+        {% else %}
+            <li><a class="dropdown-item" href="#">ログイン</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">サインアップ</a></li>0
+        {% endif %}
+    </ul>
+    </div>
+  </div>
+</nav>

@@ -3,16 +3,29 @@
 <html lang="jp">
     <head>
         <meta charset="UTF-8">
-        <title>Remmote monitoring</title>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-        <link href='//fonts.googleapis.com/css?family=Gothic' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-
-        <!-- レスポンシブ対応: 端末にあわせて柔軟に表示する（ハズ） -->
-        <meta name=”viewport” content=”width=device-width,initial-scale=1.0″>
+        <!-- レスポンシブ対応: 端末にあわせて柔軟に表示する -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Micrsoft IE対応 インストールされている最新のバージョンで表示する-->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- 各ページのTitleを挿入する -->
+        <title>{% block title %}{% endblock %}</title>
+        <!-- <title>Remote monitoring</title> -->
+
+        <!-- 2023.2.14時点最新のスターターテンプレート Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        <!-- 日報ベース --><!-- ナビゲーションのデザイン -->
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous"> -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script> -->
+        
+        <!-- Djangogirlsベース ボタンのアイコンを読み込む -->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <!-- Djangogirlsベース ボタン枠のデザインを読み込む -->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link href='//fonts.googleapis.com/css?family=Gothic' rel='stylesheet' type='text/css'>
+
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}">
         
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -24,8 +37,12 @@
         
         <!-- Plotly用のscriptを準備 -->
         <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <!-- すべての Bootstrap JavaScript プラグインと依存関係をもつ2つを1つにバンドル -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     </head>
     <body>
+        {% include "main/nav.html" %}
+
         <div class="page-header">
             <h1>遠隔監視システム</h1>
             <h5><span>現在時刻: </span><span id="realtime"></span></h5>
@@ -66,8 +83,10 @@
             <div class="row">
                 <div class="col-md-8">
                 {% block content %}
+                <!-- ここに主ページが入る -->
                 {% endblock %}
             </div>
         </div>
+        {% include "main/footer.html" %}
     </body>
 </html>

@@ -1,12 +1,12 @@
 .page-header {
-    background-color: #1560ec;
+    background-color: #1c83e2;
     margin-top: 0;
-    padding: 20px 20px 20px 40px;   /* the origin is 20px 20px 20px 40px */
+    padding: 5px 20px 5px 40px;   /* the origin is 20px 20px 20px 40px */
 }
 .page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
     /* Display the title */
     color: #ffffff;
-    font-size: 32pt;    /* the origin was 36pt */
+    font-size: 24pt;    /* the origin was 36pt */
     text-decoration: none;
 }
 .page-header h5 {
