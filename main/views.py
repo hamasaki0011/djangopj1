@@ -1,7 +1,5 @@
-# Create your views here.
 from django.shortcuts import render, redirect
-
-# Create your views here.
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.views import generic
 from django.shortcuts import get_object_or_404, render
@@ -9,9 +7,9 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 from .models import Location
-# from .forms import LocationForm, SensorDeviceForm
+from .forms import LocationForm
+# from .forms import SensorDeviceForm
 # from .models import MeasureData, SensorDevice
-
 # from .application import data_rw
 # for CSV file uploading
 import csv, io, datetime
@@ -38,13 +36,65 @@ import time
 class IndexView(generic.TemplateView):
     template_name='main/index.html'
 
-class SiteListView(generic.ListView):
-    template_name='main/site_list.html'
+# List view of Sites
+class LocationListView(generic.ListView):
+    template_name='main/location_list.html'
+    model=Location
+    
+    def get_queryset(self):
+        qs = Location.objects.all()
+        # ユーザーがログインしていれば、リストを表示する
+        # q = self.request.GET.get("search")
+        # qs = Record.objects.search(query=q)
+        # if self.request.user.is_authenticated:
+        #     qs = qs.filter(Q(public=True)|Q(user=self.request.user))
+        # else:
+        #     qs = qs.filter(public=True)
+        # the selected records are re-ordered  by "created_date"         
+        qs = qs.order_by("created_date")[:7]
+        return qs
+
+# Detail information view of each site
+class LocationDetailView(generic.DetailView):
+    template_name='main/location_detail.html'
     model=Location
 
-class SiteDetailView(generic.DetailView):
-    template_name='main/site_detail.html'
-    model=Location
+# Location creating view of a new locations
+class LocationCreateView(LoginRequiredMixin,generic.CreateView):
+    template_name='main/location_create.html'
+    # model=Location
+    form_class=LocationForm
+    success_url=reverse_lazy('main:location_list')
+    
+    def form_valid(self, form):
+        location = form.save(commit=False)
+        location.author = self.request.user
+        location.crteated_date = timezone.now()
+        location.updated_date = timezone.now()
+        location.save()
+        return super().form_valid(form)
+
+# Location updating view
+class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
+    template_name = 'main/location_update.html'
+    model = Location
+    #form_class=RecordForm
+    fields = ('name', 'memo',)
+    success_url = reverse_lazy('main:location_list')
+ 
+    def form_valid(self, form):
+        location = form.save(commit=False)
+        location.author = self.request.user
+        location.updated_date = timezone.now()
+        location.save()
+        return super().form_valid(form)
+
+# Location deleting view
+class LocationDeleteView(LoginRequiredMixin,generic.DeleteView):
+    template_name = 'main/location_delete.html'
+    model = Location
+    # form_class=RecordForm
+    success_url = reverse_lazy('main:location_list')
 
 # List view for sensor devices at each site
 # class SensorDeviceListView(generic.ListView):
@@ -168,10 +218,6 @@ class SiteDetailView(generic.DetailView):
 #             "ydata3":ydata3, 
 #         }
 #         return render(request, "sensor/sensor_device_list.html", context)
-
-class SiteCreateView(generic.CreateView):
-    template_name='main/site_create.html'
-    model=Location
 
 # 2022/11/8 CSV file uplaoding
 # it does need as reverse url path, does not it need? at 2022/11/11  

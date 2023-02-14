@@ -10,7 +10,7 @@ from .models import Location
 class LocationForm(forms.ModelForm):
     class Meta:
         model=Location
-        fields=('author','name','memo',)
+        fields=('name','memo',)
 
 # class SensorDeviceForm(forms.ModelForm):
 #     class Meta:

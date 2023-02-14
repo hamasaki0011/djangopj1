@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %}
+{% block content %}
+
+    <h1>削除確認</h1>
+    <form method="POST">{% csrf_token %}
+        <p>タイトル「{{ location.name }}」を削除します。よろしければ実行ボタンを押してください。</p>
+        <input type="submit" value="削除実行">
+    </form>
+    <br>
+    <div>
+        <a  class="btn btn-default" href="{% url 'record:record_create' %}"><span class="glyphicon glyphicon-pencil"></span> 開発記録を作成</a>
+        <a class="btn btn-default" href="{% url 'record:record_list' %}"><span class="glyphicon glyphicon-list-alt"></span> 開発記録一覧を表示</a>
+    </div>
+
+{% endblock %}

@@ -7,10 +7,12 @@ from .models import Record
 from .forms import RecordForm
 from django.utils import timezone
 
+# Record list view
 class RecordListView(ListView):
     template_name='record/record_list.html'
     model=Record
     
+    # the selected records are reordered  by "published_date"
     def get_queryset(self):
         qs = Record.objects.all()
         # ユーザーがログインしていれば、リストを表示する
@@ -20,15 +22,16 @@ class RecordListView(ListView):
         #     qs = qs.filter(Q(public=True)|Q(user=self.request.user))
         # else:
         #     qs = qs.filter(public=True)
-        
-        # the selected records sre reordered  by "published_date"         
-        qs = qs.order_by("-published_date")[:7]
+        # qs = qs.order_by("-published_date")[:7]
+        qs = qs.order_by("-published_date")
         return qs
-    
+
+# Detail view of record    
 class RecordDetailView(DetailView):
     template_name='record/record_detail.html'
     model=Record
 
+# Updateing vew of record
 class RecordUpdateView(LoginRequiredMixin,UpdateView):
     template_name = 'record/record_update.html'
     model = Record
@@ -43,6 +46,7 @@ class RecordUpdateView(LoginRequiredMixin,UpdateView):
         record.save()
         return super().form_valid(form)
 
+# Creating view of a new record
 class RecordCreateView(LoginRequiredMixin,CreateView):
     template_name='record/record_create.html'
     form_class=RecordForm

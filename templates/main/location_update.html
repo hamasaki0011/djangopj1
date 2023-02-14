@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<!-- <big><p><a href="{% url 'main:location_create' %}"><span class="glyphicon glyphicon-plus"></span>新規作成</a></p></big> -->
+    <h4>監視サイト情報を更新</h4>
+    <form method="POST" class="record-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">保存</button>
+    </form>
+    <br>
+    <div>
+        <a  class="btn btn-default" href="{% url 'record:record_create' %}"><span class="glyphicon glyphicon-pencil"></span> 開発記録を作成</a>
+        <a class="btn btn-default" href="{% url 'record:record_list' %}"><span class="glyphicon glyphicon-list-alt"></span> 開発記録一覧を表示</a>
+    </div>
+{% endblock %}

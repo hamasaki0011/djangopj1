@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+{% block content %}
+    <h2>{{ location.name }} 様</h2>
+    <p>更新日：{{ location.updated_at }}</p>
+    <h3>MEMO: {{ location.memo }}</h3>
+    <div>
+        <h2>ここにLocationのsiteリストを表示する。</h2>
+        <h2>DB:Locationのみを参照しているので無理?</h2>
+    </div>
+    <br>
+    <div>
+        <a class="btn btn-default" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-backward"></span> リスト表示に戻る</a>
+        <a class="btn btn-default" href="{% url 'main:location_update' location.pk %}"><span class="glyphicon glyphicon-pencil"></span> 監視サイト情報を更新する</a>
+        <a class="btn btn-default" href="{% url 'main:location_delete' location.pk %}"><span class="glyphicon glyphicon-remove-sign"></span> このサイトを削除する</a>    
+    </div>
+    <br>
+    <div>
+        <a class="btn btn-default" href="/"><span class="glyphicon glyphicon-step-backward"></span> TOP頁に戻る</a>
+        <a class="btn btn-default" href="{% url 'record:record_list' %}"><span class="glyphicon glyphicon-list-alt"></span> 開発記録一覧を表示</a>
+    </div>
+    <br>
+    <div>
+        <a  class="btn btn-default" href="{% url 'record:record_create' %}"><span class="glyphicon glyphicon-pencil"></span> 開発記録を作成</a>
+    </div>
+{% endblock %}

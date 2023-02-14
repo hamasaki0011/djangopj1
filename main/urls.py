@@ -6,11 +6,12 @@ urlpatterns=[
     # Top view
     path('', views.IndexView.as_view(), name='index'),
     # Site arrangement view
-    path('main/', views.SiteListView.as_view(), name='site_list'),
-    path('main/<int:pk>/', views.SiteDetailView.as_view(), name='site_detail'),
-    path('main/', views.SiteCreateView.as_view(), name='site_create'),
+    path('main/list', views.LocationListView.as_view(), name='location_list'),
+    path('main/detail/<int:pk>/', views.LocationDetailView.as_view(), name='location_detail'),
+    path('main/create/', views.LocationCreateView.as_view(), name='location_create'),
+    path('main/update/<int:pk>/', views.LocationUpdateView.as_view(), name='location_update'),
+    path('main/delete/<int:pk>/', views.LocationDeleteView.as_view(), name='location_delete'),
     
-    # path('index/', views.IndexView.as_view(), name='index'),
     # # Display path root for all sensor devices belong in each site/location
     # path('sensor/device/list/<int:pk>/', views.SensorDeviceListView.as_view(), name='sensor_device_list'),
     # # 2022/12/14 Draw chart by using another chart tool
