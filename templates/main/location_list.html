@@ -3,22 +3,32 @@
 {% block title %}遠隔監視対象サイト一覧{% endblock %}
 
 {% block content %}
-<div>
-    <h3>遠隔監視対象サイト一覧(登録順)：</h3>
+<h3>遠隔監視対象サイト一覧(登録順)</h3>
+<div class="container">
+    <div class="mt-3 d-flex justify-content-end">
+        <a class="btn btn-default" href="{% url 'main:location_create' %}"><span class="glyphicon glyphicon-log-in"></span> サイトを追加する</a>
+        <a class="btn btn-default" href="/"><span class="glyphicon glyphicon-step-backward"></span> TOP頁に戻る</a>
+    </div>
+
     {% for location in location_list %}
-        <div class="main">
-            <div class="date">
-                <p>更新日: {{ location.updated_date }}</p>
+        <div class="card my-5">
+        <!-- <div class="main"> -->
+            <div class="card-body">
+                <h5 class="card-title">
+                    <h4><a href="{% url 'main:location_detail' location.pk %}">{{ location.name}}様</a></h4>
+                </h5>
+                <div class="date">
+                    <p>情報更新日: {{ location.updated_date }}</p>
+                </div>
+                <div>
+                    <p class="card-text"><small>【メモ】</small>{{ location.memo }}</p>
+                </div>
+                <div class="mt-3 d-flex justify-content-end">
+                    <a class="btn btn-default" href="{% url 'main:location_update' location.pk %}" class="card-link"><span class="glyphicon glyphicon-pencil"></span> 編集</a>
+                    <a class="btn btn-default" href="{% url 'main:location_delete' location.pk %}" class="card-link"><span class="glyphicon glyphicon-log-out"></span> 削除</a>    
+                </div>
             </div>
-            <h4>
-                <a href="{% url 'main:location_detail' location.pk %}">{{ location.name }}</a>
-                <span>  (メモ){{ location.memo }}</span>
-            </h4>
         </div>
     {% endfor %}
-</div>
-<div>
-    <a class="btn btn-default" href="/"><span class="glyphicon glyphicon-step-backward"></span> TOP頁に戻る</a>
-    <a class="btn btn-default" href="{% url 'main:location_create' %}"><span class="glyphicon glyphicon-log-in"></span> サイトを追加する</a>
 </div>
 {% endblock %}
