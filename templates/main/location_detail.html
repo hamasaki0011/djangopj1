@@ -11,6 +11,8 @@
         <h2>DB:Locationのみを参照しているので無理?</h2>
     </div>
     <br>
+    <!-- <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{location.pk}}">削除</button>
+    {% include 'main/location_delete.html' %} -->
     <div>
         <a class="btn btn-default" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-backward"></span> 一覧表示に戻る</a>
         <a class="btn btn-default" href="{% url 'main:location_update' location.pk %}"><span class="glyphicon glyphicon-pencil"></span> サイト情報を更新</a>

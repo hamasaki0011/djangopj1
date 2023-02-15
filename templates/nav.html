@@ -2,9 +2,9 @@
 <nav class="navbar navbar-light" style="background-color: #1c83e2;">
   <div class="container-fluid">
     <div>
-      <a class="navbar-brand" href="{% url 'main:index' %}">
+      <a class="navbar-brand" href="{% url 'main:index' %}">Home
         <!-- <img src="/media/pages/rmt_icon.png" style="width:50px;"/> -->
-        <i class="bi bi-bootstrap-fill" style="font-size: 2rem;"></i>
+        <i class="bi bi-house-door" style="font-size: 3rem; color: white;"></i>
       </a>
       <!-- ナビ左上のトグルボタン -->
       <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,14 +16,15 @@
           <!-- <li class="nav-item"><a class="nav-link" href="#">Link</a></li> -->
         </ul>
       </div>
-    
     </div>
+    <!-- 検索バーを指定 -->
     <div class="flex-grow-1" style="max-width:350px;">
       <form class="d-flex" method="GET">
         <input class="form-control me-2" type="search" placeholder="検索..." aria-label="Search" name="search">
         <button class="btn btn-outline-light" type="submit">検索</button>
       </form>
     </div>
+    <!-- ドロップダウンボタンを指定 -->
     <div class="text-light nav-item dropdown">
       <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
       <ul class="dropdown-menu endposition" aria-labelledby="navbarDropdown">
