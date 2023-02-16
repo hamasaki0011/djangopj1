@@ -69,7 +69,7 @@ class LocationCreateView(LoginRequiredMixin,generic.CreateView):
     
     def form_valid(self, form):
         location = form.save(commit=False)
-        location.author = self.request.user
+        # location.author = self.request.user
         location.crteated_date = timezone.now()
         location.updated_date = timezone.now()
         location.save()
@@ -85,7 +85,7 @@ class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
  
     def form_valid(self, form):
         location = form.save(commit=False)
-        location.author = self.request.user
+        # location.author = self.request.user
         location.updated_date = timezone.now()
         location.save()
         return super().form_valid(form)

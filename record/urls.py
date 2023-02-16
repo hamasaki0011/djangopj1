@@ -9,7 +9,7 @@ urlpatterns = [
     path('create/', views.RecordCreateView.as_view(), name='record_create'),
     path('delete/<int:pk>/', views.RecordDeleteView.as_view(), name='record_delete'),
     #path('record/delete/<int:pk>/', views.record_delete, name='record_delete'),
-    
+    # Articles
     path('record/article/', views.RecordArticleView.as_view(), name='record_article'),
     path('record/python/', views.RecordPythonView.as_view(), name='record_python'),
     path('record/server/', views.RecordServerView.as_view(), name='record_server'),   

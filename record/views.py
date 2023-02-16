@@ -41,7 +41,7 @@ class RecordUpdateView(LoginRequiredMixin,UpdateView):
  
     def form_valid(self, form):
         record = form.save(commit=False)
-        record.author = self.request.user
+        # record.author = self.request.user
         record.published_date = timezone.now()
         record.save()
         return super().form_valid(form)
@@ -54,7 +54,7 @@ class RecordCreateView(LoginRequiredMixin,CreateView):
     
     def form_valid(self, form):
         record = form.save(commit=False)
-        record.author = self.request.user
+        # record.author = self.request.user
         record.published_date = timezone.now()
         record.save()
         return super().form_valid(form)
@@ -73,5 +73,3 @@ class RecordPythonView(TemplateView):
     
 class RecordServerView(TemplateView):
     template_name='record/record_server.html'
-
-    

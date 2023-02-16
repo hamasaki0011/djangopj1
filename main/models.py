@@ -13,10 +13,12 @@ class Location(models.Model):
     """ Location model """
     class Meta:
         db_table='location'
-    author=models.ForeignKey(
-        'auth.User',
-        on_delete=models.CASCADE,
-    )
+        verbose_name='現場'
+        verbose_name_plural='現場一覧'
+    # author=models.ForeignKey(
+    #     'auth.User',
+    #     on_delete=models.CASCADE,
+    # )
     name=models.CharField(verbose_name='現場', max_length=100)
     memo=models.CharField(verbose_name='メモ', max_length=500, default='',blank=True,null=True)
     created_date=models.DateTimeField(verbose_name='作成日', default=timezone.now)

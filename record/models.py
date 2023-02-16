@@ -4,7 +4,12 @@ from django.utils import timezone
 #import datetime
 
 class Record(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    class Meta:
+        db_table='record'
+        verbose_name='開発記録'
+        verbose_name_plural='記録一覧'
+        
+    # author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title=models.CharField(verbose_name='標題',max_length=200)
     text=models.TextField(verbose_name='記事')
     created_date=models.DateTimeField(default=timezone.now)
