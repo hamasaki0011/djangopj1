@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 # ページへのアクセスをログインユーザーのみに制限する
-from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.views import generic
 from django.shortcuts import get_object_or_404, render
@@ -35,7 +35,7 @@ import time
 
 # Top view, you can select a target site for remote monitoring
 class IndexView(generic.TemplateView):
-    template_name='main/index.html'
+    template_name='main/main_index.html'
 
 # List view of Sites
 class LocationListView(generic.ListView):
@@ -61,7 +61,8 @@ class LocationDetailView(generic.DetailView):
     model=Location
 
 # Location creating view of a new locations
-class LocationCreateView(LoginRequiredMixin,generic.CreateView):
+# class LocationCreateView(LoginRequiredMixin,generic.CreateView):
+class LocationCreateView(generic.CreateView):
     template_name='main/location_create.html'
     # model=Location
     form_class=LocationForm
@@ -76,7 +77,8 @@ class LocationCreateView(LoginRequiredMixin,generic.CreateView):
         return super().form_valid(form)
 
 # Location updating view
-class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
+# class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
+class LocationUpdateView(generic.UpdateView):
     template_name = 'main/location_update.html'
     model = Location
     #form_class=RecordForm
@@ -91,7 +93,8 @@ class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
         return super().form_valid(form)
 
 # Location deleting view
-class LocationDeleteView(LoginRequiredMixin,generic.DeleteView):
+# class LocationDeleteView(LoginRequiredMixin,generic.DeleteView):
+class LocationDeleteView(generic.DeleteView):
     template_name = 'main/location_delete.html'
     model = Location
     # form_class=RecordForm

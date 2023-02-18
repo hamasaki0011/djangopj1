@@ -5,7 +5,7 @@
     {% for record in record_list %}
         <div class="record">
             <div class="date">
-                <p>published: {{ record.published_date }}</p>
+                <p>更新日: {{ record.published_date }}</p>
             </div>
             <h4><a href="{% url 'record:record_detail' record.pk %}">{{ record.title }}</a></h4>
             <p>{{ record.text|linebreaksbr }}</p>

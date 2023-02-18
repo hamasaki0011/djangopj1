@@ -12,6 +12,15 @@ class LocationForm(forms.ModelForm):
         model=Location
         fields=('name','memo',)
 
+class LocationFormClass(forms.Form):
+    name = forms.CharField()
+    memo = forms.CharField(widget=forms.Textarea())
+
+    def __init__(self, *args, **kwargs):
+        for field in self.base_fields.values():
+            field.widget.attrs.update({"class":"form-control"})
+        super().__init__(*args, **kwargs)
+
 # class SensorDeviceForm(forms.ModelForm):
 #     class Meta:
 #         model=SensorDevice

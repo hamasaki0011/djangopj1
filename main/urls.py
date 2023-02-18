@@ -4,13 +4,13 @@ from . import views
 app_name='main'
 urlpatterns=[
     # Top view
-    path('', views.IndexView.as_view(), name='index'),
+    path('', views.IndexView.as_view(), name='main_index'),
     # Site arrangement view
-    path('main/list', views.LocationListView.as_view(), name='location_list'),
-    path('main/detail/<int:pk>/', views.LocationDetailView.as_view(), name='location_detail'),
-    path('main/create/', views.LocationCreateView.as_view(), name='location_create'),
-    path('main/update/<int:pk>/', views.LocationUpdateView.as_view(), name='location_update'),
-    path('main/delete/<int:pk>/', views.LocationDeleteView.as_view(), name='location_delete'),
+    path('list', views.LocationListView.as_view(), name='location_list'),
+    path('detail/<int:pk>/', views.LocationDetailView.as_view(), name='location_detail'),
+    path('create/', views.LocationCreateView.as_view(), name='location_create'),
+    path('update/<int:pk>/', views.LocationUpdateView.as_view(), name='location_update'),
+    path('delete/<int:pk>/', views.LocationDeleteView.as_view(), name='location_delete'),
     
     # # Display path root for all sensor devices belong in each site/location
     # path('sensor/device/list/<int:pk>/', views.SensorDeviceListView.as_view(), name='sensor_device_list'),

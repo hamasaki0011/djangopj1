@@ -27,7 +27,7 @@ h1, h2, h3, h4 {
 .save {
     float: right;
 }
-.record-form textarea, .record-form input {
+.main-form textarea, .main-form input {
     width: 100%;
 }
 .top-menu, .top-menu:hover, .top-menu:visited { 

@@ -4,13 +4,20 @@
 
 {% block content %}
     <h4>監視サイトを追加</h4>
-    <form method="POST" class="record-form">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">保存</button>
-    </form>
-    <br>
-    <div>
-        <a  class="btn btn-default" href="{% url 'record:record_create' %}"><span class="glyphicon glyphicon-pencil"></span> 開発記録を作成</a>
-        <a class="btn btn-default" href="{% url 'record:record_list' %}"><span class="glyphicon glyphicon-list-alt"></span> 開発記録一覧を表示</a>
+    <div class="container my-3" style="max-width:700px;">
+        {% comment %} <form method="POST"> {% endcomment %}
+        <form method="POST" class="main-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="form-control btn btn-primary" type="submit">登録</button>
+            {% comment %} <button type="submit" class="save btn btn-default">登録</button> {% endcomment %}
+        </form>
+
+        {% comment %} <br>
+        <div>
+            <a  class="btn btn-default" href="{% url 'record:record_create' %}"><span class="glyphicon glyphicon-pencil"></span> 開発記録を作成</a>
+            <a class="btn btn-default" href="{% url 'record:record_list' %}"><span class="glyphicon glyphicon-list-alt"></span> 開発記録一覧を表示</a>
+        </div> {% endcomment %}
+
     </div>
 {% endblock %}

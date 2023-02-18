@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 # Create your views here.
-from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Record
@@ -32,7 +32,8 @@ class RecordDetailView(DetailView):
     model=Record
 
 # Updateing vew of record
-class RecordUpdateView(LoginRequiredMixin,UpdateView):
+# class RecordUpdateView(LoginRequiredMixin,UpdateView):
+class RecordUpdateView(UpdateView):
     template_name = 'record/record_update.html'
     model = Record
     #form_class=RecordForm
@@ -47,7 +48,8 @@ class RecordUpdateView(LoginRequiredMixin,UpdateView):
         return super().form_valid(form)
 
 # Creating view of a new record
-class RecordCreateView(LoginRequiredMixin,CreateView):
+# class RecordCreateView(LoginRequiredMixin,CreateView):
+class RecordCreateView(CreateView):
     template_name='record/record_create.html'
     form_class=RecordForm
     success_url=reverse_lazy('record:record_list')
@@ -59,7 +61,8 @@ class RecordCreateView(LoginRequiredMixin,CreateView):
         record.save()
         return super().form_valid(form)
  
-class RecordDeleteView(LoginRequiredMixin,DeleteView):
+# class RecordDeleteView(LoginRequiredMixin,DeleteView):
+class RecordDeleteView(DeleteView):
     template_name = 'record/record_delete.html'
     model = Record
     # form_class=RecordForm

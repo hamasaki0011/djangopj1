@@ -1,30 +1,19 @@
-{% load static %}	
 <!DOCTYPE html>
 <html lang="jp">
     <head>
         <meta charset="UTF-8">
-        <!-- レスポンシブ対応: 端末にあわせて柔軟に表示する -->
+        {% comment %} レスポンシブ対応: 端末にあわせて柔軟に表示する {% endcomment %}
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Micrsoft IE対応 インストールされている最新のバージョンで表示する-->
+        {% comment %} Micrsoft IE対応 インストールされている最新のバージョンで表示する {% endcomment %}
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
         {% include "css.html" %}
 
-        <!-- 各ページのTitleを挿入する -->
-        <!-- Origin were <title>Remote monitoring</title> -->
+        {% comment %} 各ページのTitleを挿入する {% endcomment %}
+        {% comment %} Origin were <title>Remote monitoring</title> {% endcomment %}
         <title>{% block title %}{% endblock %}</title>
 
-        <!-- 日報ベース --><!-- ナビゲーションのデザイン -->
-        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous"> -->
-        
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
-        <!-- jQueryのスクリプト -->
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
-        <!-- JAVAscriptの外部ソース -->
-        <!-- <script type="text/javascript" src="{% static 'script.js' %}"></script> -->
-          
+    
     </head>
     <body>
         {% include "nav.html" %}
@@ -32,39 +21,8 @@
         <div class="page-header">
             <h1>遠隔監視システム</h1>
             <h5><span>現在時刻: </span><span id="realtime"></span></h5>
-            <script>
-                function twoDigit(num) {
-                    let ret;
-                    if (num < 10)
-                        ret = "0" + num;
-                    else
-                        ret = num;
-                    return ret;
-                }
-        
-                function showClock() {
-                    let now = new Date();
-                    let year = now.getFullYear();
-                    let month = now.getMonth() + 1;
-                    let date = now.getDate();
-                    let week = now.getDay();
-                    let wd = ['日', '月', '火', '水', '木', '金', '土'];
-                    let nowHour = twoDigit(now.getHours());
-                    let nowMin = twoDigit(now.getMinutes());
-                    let nowSec = twoDigit(now.getSeconds());
-                    let msgDate = year + '年' + month + '月' + date+ '日'+ '(' + wd[week] + ')';
-                    let msgTime = "" + nowHour + ":" + nowMin + ":" + nowSec;
-                    //document.getElementById("date").innerHTML = year + '年' + month + '月' + date+ '日';
-                    //target0 = document.getElementById("today");
-                    //target0.innerHTML = '今日は　' + msgDate;
-                    //target1 = document.getElementById("now");
-                    //target1.innerHTML = '現在時刻　' + msgTime;
-                    target = document.getElementById("realtime");
-                    target.innerHTML =msgDate + ' ' + msgTime;
-                }
-                setInterval('showClock()', 1000);
-            </script>
         </div>
+
         <div class="content container">
             <div class="row">
                 <div class="col-md-8">
@@ -73,6 +31,7 @@
                 {% endblock %}
             </div>
         </div>
+        
         {% include "footer.html" %}
         {% include "js.html" %}
 </html>
