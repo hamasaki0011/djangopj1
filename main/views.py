@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 from .models import Location
-from .forms import LocationForm
+from .forms import LocationForm,LocationFormClass
 # from .forms import SensorDeviceForm
 # from .models import MeasureData, SensorDevice
 # from .application import data_rw
@@ -60,28 +60,47 @@ class LocationDetailView(generic.DetailView):
     template_name='main/location_detail.html'
     model=Location
 
+class LocationCreateModelFormView(generic.CreateView):
+    template_name = "main/location_form.html"
+    form_class = LocationForm
+    success_url = reverse_lazy("main:location_list")
+    
+    # このviewではデータの取り込み、保存も一括して行われるので以下はいらない。  
+    # # Received and saved data 
+    # def form_valid(self, form):
+    #     data = form.cleaned_data    # 入力したデータを辞書型で取り出す
+    #     obj=Location(**data)        # 入力したデータでオブジェクトを作成し保存する
+    #     obj.save()
+    #     return super().form_valid(form)
+
 # Location creating view of a new locations
 # class LocationCreateView(LoginRequiredMixin,generic.CreateView):
-class LocationCreateView(generic.CreateView):
-    template_name='main/location_create.html'
-    # model=Location
-    form_class=LocationForm
-    success_url=reverse_lazy('main:location_list')
+# class LocationCreateView(generic.CreateView):
+#     template_name='main/location_create.html'
+#     # model=Location
+#     form_class=LocationForm
+#     success_url=reverse_lazy('main:location_list')
     
-    def form_valid(self, form):
-        location = form.save(commit=False)
-        # location.author = self.request.user
-        location.crteated_date = timezone.now()
-        location.updated_date = timezone.now()
-        location.save()
-        return super().form_valid(form)
+#     # Received and saved data 
+#     def form_valid(self, form):
+#         location = form.save(commit=False)
+#         # location.author = self.request.user
+#         location.crteated_date = timezone.now()
+#         location.updated_date = timezone.now()
+#         location.save()
+#         return super().form_valid(form)
+
+# class LocationUpdateModelFormView(generic.UpdateView):
+#     template_name = "main/location_form.html"
+#     form_class = LocationForm
+#     success_url = reverse_lazy("main:location_list")
 
 # Location updating view
 # class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
 class LocationUpdateView(generic.UpdateView):
     template_name = 'main/location_update.html'
     model = Location
-    #form_class=RecordForm
+    # form_class = LocationForm
     fields = ('name', 'memo',)
     success_url = reverse_lazy('main:location_list')
  

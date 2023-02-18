@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib import admin
 import datetime
 from django.utils import timezone
-import uuid
+# import uuid
 # to embed a DB updating at 2022/11/10
 from django.urls import reverse
 from datetime import datetime as dt 
@@ -22,7 +22,8 @@ class Location(models.Model):
     name=models.CharField(verbose_name='現場', max_length=100)
     memo=models.CharField(verbose_name='メモ', max_length=500, default='',blank=True,null=True)
     created_date=models.DateTimeField(verbose_name='作成日', default=timezone.now)
-    updated_date=models.DateTimeField(verbose_name='更新日', blank=True, null=True)
+    updated_date=models.DateTimeField(verbose_name='更新日', default=timezone.now)
+    # updated_date=models.DateTimeField(verbose_name='更新日', blank=True, null=True)
 
     def __str__(self):
         return self.name

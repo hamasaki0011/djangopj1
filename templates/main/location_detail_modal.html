@@ -1,0 +1,23 @@
+{% extends 'main/main_base.html' %}
+
+{% block title %}遠隔監視対象情報{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="card mx-auto my-5 w-50" style="min-width:500px;">
+        <div class="card-header">
+            {{ location.updated_date }}
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">{{ location.name }} </h3>
+            <p class="card-text">{{ location.memo }}</p>
+            <div class="w-50">
+                <a href="{% url 'main:location_update' location.pk %}" class="btn btn-primary btn-sm">編集</a>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{location.pk}}">削除</button>
+                {% include 'main/location_delete_modal.html' %}
+            </div>
+        </div>
+    </div> 
+</div>
+{% endblock %}
