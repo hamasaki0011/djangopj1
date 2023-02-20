@@ -12,8 +12,8 @@ urlpatterns=[
     path('create/', views.LocationCreateModelFormView.as_view(), name='location_create'),
     # path('create/', views.LocationCreateView.as_view(), name='location_create'),
     # path("create/", views.LocationCreateFormView.as_view(), name="location_create"),
-    path('update/<int:pk>/', views.LocationUpdateView.as_view(), name='location_update'),
-    # path('update/<int:pk>/', views.LocationUpdateModelFormView.as_view(), name='location_update'),
+    # path('update/<int:pk>/', views.LocationUpdateView.as_view(), name='location_update'),
+    path('update/<int:pk>/', views.LocationUpdateModelFormView.as_view(), name='location_update'),
     path('delete/<int:pk>/', views.LocationDeleteView.as_view(), name='location_delete'),
     # path('delete/<int:pk>/', views.LocationDeleteView.as_view(), name='location_delete_modal'),
     

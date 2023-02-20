@@ -59,6 +59,9 @@ class LocationListView(generic.ListView):
 class LocationDetailView(generic.DetailView):
     template_name='main/location_detail.html'
     model=Location
+    
+    # def get_object(self):
+    #     return super().get_object()
 
 class LocationCreateModelFormView(generic.CreateView):
     template_name = "main/location_form.html"
@@ -90,26 +93,32 @@ class LocationCreateModelFormView(generic.CreateView):
 #         location.save()
 #         return super().form_valid(form)
 
-# class LocationUpdateModelFormView(generic.UpdateView):
-#     template_name = "main/location_form.html"
-#     form_class = LocationForm
-#     success_url = reverse_lazy("main:location_list")
+class LocationUpdateModelFormView(generic.UpdateView):
+    template_name = "main/location_form.html"
+    form_class = LocationForm
+    success_url = reverse_lazy("main:location_list")
+    
+    # Following get_querryset() is mondatly requrered.
+    # in case of using a FormView
+    def get_queryset(self):
+        qs = Location.objects.all()
+        return qs
 
 # Location updating view
 # class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
-class LocationUpdateView(generic.UpdateView):
-    template_name = 'main/location_update.html'
-    model = Location
-    # form_class = LocationForm
-    fields = ('name', 'memo',)
-    success_url = reverse_lazy('main:location_list')
+# class LocationUpdateView(generic.UpdateView):
+#     template_name = 'main/location_update.html'
+#     model = Location
+#     # form_class = LocationForm
+#     fields = ('name', 'memo',)
+#     success_url = reverse_lazy('main:location_list')
  
-    def form_valid(self, form):
-        location = form.save(commit=False)
-        # location.author = self.request.user
-        location.updated_date = timezone.now()
-        location.save()
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         location = form.save(commit=False)
+#         # location.author = self.request.user
+#         location.updated_date = timezone.now()
+#         location.save()
+#         return super().form_valid(form)
 
 # Location deleting view
 # class LocationDeleteView(LoginRequiredMixin,generic.DeleteView):

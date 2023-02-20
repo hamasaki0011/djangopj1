@@ -10,6 +10,7 @@ from .models import Location
 class LocationForm(forms.ModelForm):
     class Meta:
         model=Location
+        # fields="__all__"
         fields=('name','memo',)
         
     def __init__(self, *args, **kwargs):
