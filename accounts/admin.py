@@ -1,34 +1,34 @@
-# from django.contrib import admin
-# from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-# from .models import User
+from .models import User
 
-# class UserAdmin(BaseUserAdmin):
+class UserAdmin(BaseUserAdmin):
     
-#     list_display = (
-#         "email",
-#         "active",
-#         "staff",
-#         "admin",
-#     )
-#     list_filter = (
-#         "admin",
-#         "active",
-#     )
-#     filter_horizontal = ()
-#     ordering = ("email",)
-#     search_fields = ('email',)
+    list_display = (
+        "email",
+        "active",
+        "staff",
+        "admin",
+    )
+    list_filter = (
+        "admin",
+        "active",
+    )
+    filter_horizontal = ()
+    ordering = ("email",)
+    search_fields = ('email',)
 
-#     fieldsets = (
-#         (None, {'fields': ('email', 'password')}),
-#         ('Permissions', {'fields': ('staff','admin',)}),
-#     )
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Permissions', {'fields': ('staff','admin',)}),
+    )
 
-#     add_fieldsets = (
-#         (None, {
-#             'classes': ('wide',),
-#             'fields': ('email', 'password1', 'password2')}
-#         ),
-#     )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2')}
+        ),
+    )
 
-# admin.site.register(User, UserAdmin)
+admin.site.register(User, UserAdmin)

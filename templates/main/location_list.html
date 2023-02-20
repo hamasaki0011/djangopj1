@@ -6,10 +6,8 @@
 
 <div class="container">
     <h3>遠隔監視対象サイト一覧(登録順)</h3>
-
     <div class="mt-3 d-flex justify-content-end">
         <a class="btn btn-default" href="{% url 'main:location_create' %}"><span class="glyphicon glyphicon-log-in"></span> サイトを追加する</a>
-        <a class="btn btn-default" href="{% url 'main:main_index' %}"><span class="glyphicon glyphicon-step-backward"></span> TOP頁に戻る</a>
     </div>
 
     {% for location in location_list %}
