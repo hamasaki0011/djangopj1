@@ -1,7 +1,7 @@
 {% extends "main/main_base.html" %}
 {% block title %}
     {% if location %}
-        サイト「{{ location.name }}」の編集
+        既存サイトの編集
     {% else %}
         サイトの新規作成
     {% endif %}
@@ -11,7 +11,11 @@
     <form method="POST"> 
     {% csrf_token %}
     {{ form.as_p }}
-    <button class="form-control btn btn-primary" type="submit">登録</button>
+        {% if location %}
+            <button class="form-control btn btn-primary" type="submit">編集結果を保存</button>
+        {% else %}
+            <button class="form-control btn btn-primary" type="submit">登録</button>
+        {% endif %}
     </form>
 </div>
 {% endblock %}

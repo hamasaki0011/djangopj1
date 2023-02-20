@@ -1,0 +1,33 @@
+{% extends 'main/main_base.html' %}
+
+{% block title %}遠隔監視対象情報{% endblock %}
+
+{% block content %}
+    <!-- <h2>{{ location.name }} 様</h2>
+    <p>更新日：{{ location.updated_date }}</p>
+    <h3>MEMO: {{ location.memo }}</h3> -->
+    <br>
+    <h2 class="card-title">{{ location.name }} 様</h2>
+    <p class="card-text">【メモ】{{ location.memo }}</p>
+    <small><p>更新日：{{ location.updated_date }}</p></small>
+    <div class="card-body">
+        <div class="w-100">
+            <a href="{% url 'main:location_update' location.pk %}" class="btn btn-primary btn-sm">サイト情報を編集</a>
+            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{location.pk}}">サイト情報を削除</button>
+            {% include 'main/location_delete.html' %}
+        </div>
+    </div>
+    <br>
+    <div>
+        <h2>ここにLocationのsiteリストを表示する。</h2>
+        <h2>DB:Locationのみを参照しているので無理?</h2>
+    </div>
+    <br>
+    <div>
+        <a class="btn btn-default" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-backward"></span> 一覧表示に戻る</a>
+    </div>
+    <br>
+    <div>
+        <a class="btn btn-default" href="{% url 'main:main_index' %}"><span class="glyphicon glyphicon-step-backward"></span> TOP頁に戻る</a>
+    </div>
+{% endblock %}

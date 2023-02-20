@@ -37,7 +37,7 @@ import time
 class IndexView(generic.TemplateView):
     template_name='main/main_index.html'
 
-# List view of Sites
+# Site's list view 
 class LocationListView(generic.ListView):
     template_name='main/location_list.html'
     model=Location
@@ -54,8 +54,8 @@ class LocationListView(generic.ListView):
         # the selected records are re-ordered  by "created_date"         
         qs = qs.order_by("created_date")[:7]
         return qs
-
-# Detail information view of each site
+# -----------------------------------------------------------------
+# Site's detail information view of each site
 class LocationDetailView(generic.DetailView):
     template_name='main/location_detail.html'
     model=Location
@@ -63,6 +63,7 @@ class LocationDetailView(generic.DetailView):
     # def get_object(self):
     #     return super().get_object()
 
+# Create a new site's information view
 class LocationCreateModelFormView(generic.CreateView):
     template_name = "main/location_form.html"
     form_class = LocationForm
@@ -76,7 +77,7 @@ class LocationCreateModelFormView(generic.CreateView):
     #     obj.save()
     #     return super().form_valid(form)
 
-# Location creating view of a new locations
+# Another way to create
 # class LocationCreateView(LoginRequiredMixin,generic.CreateView):
 # class LocationCreateView(generic.CreateView):
 #     template_name='main/location_create.html'
@@ -93,6 +94,7 @@ class LocationCreateModelFormView(generic.CreateView):
 #         location.save()
 #         return super().form_valid(form)
 
+# Update site's information
 class LocationUpdateModelFormView(generic.UpdateView):
     template_name = "main/location_form.html"
     form_class = LocationForm
@@ -104,7 +106,7 @@ class LocationUpdateModelFormView(generic.UpdateView):
         qs = Location.objects.all()
         return qs
 
-# Location updating view
+# Another way
 # class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
 # class LocationUpdateView(generic.UpdateView):
 #     template_name = 'main/location_update.html'
@@ -120,7 +122,9 @@ class LocationUpdateModelFormView(generic.UpdateView):
 #         location.save()
 #         return super().form_valid(form)
 
-# Location deleting view
+# -----------------------------------------------------------------
+
+# Delete site information
 # class LocationDeleteView(LoginRequiredMixin,generic.DeleteView):
 class LocationDeleteView(generic.DeleteView):
     template_name = 'main/location_delete.html'

@@ -1,0 +1,13 @@
+{% extends 'main/main_base.html' %}
+
+{% block title %}遠隔監視対象を削除{% endblock %}
+
+{% block content %}
+
+    <h1>削除確認</h1>
+    <form method="POST">{% csrf_token %}
+        <p>タイトル「{{ location.name }}」を削除します。よろしければ実行ボタンを押してください。</p>
+        <input type="submit" value="削除実行">
+    </form>
+    <br>
+{% endblock %}

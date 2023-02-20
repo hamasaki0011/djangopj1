@@ -8,12 +8,19 @@ urlpatterns=[
     path('', views.IndexView.as_view(), name='main_index'),
     # Site arrangement view
     path('list', views.LocationListView.as_view(), name='location_list'),
+    # Detail view
     path('detail/<int:pk>/', views.LocationDetailView.as_view(), name='location_detail'),
+
+    # Create view
     path('create/', views.LocationCreateModelFormView.as_view(), name='location_create'),
     # path('create/', views.LocationCreateView.as_view(), name='location_create'),
     # path("create/", views.LocationCreateFormView.as_view(), name="location_create"),
-    # path('update/<int:pk>/', views.LocationUpdateView.as_view(), name='location_update'),
+    
+    # Update view
     path('update/<int:pk>/', views.LocationUpdateModelFormView.as_view(), name='location_update'),
+    # path('update/<int:pk>/', views.LocationUpdateView.as_view(), name='location_update'),
+    
+    # Delete view
     path('delete/<int:pk>/', views.LocationDeleteView.as_view(), name='location_delete'),
     # path('delete/<int:pk>/', views.LocationDeleteView.as_view(), name='location_delete_modal'),
     
