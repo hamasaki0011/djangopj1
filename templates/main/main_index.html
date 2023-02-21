@@ -3,22 +3,41 @@
 {% block title %}Remote Monitoring System{% endblock %}
 
 {% block content %}
-<h2>さて、何を始めますか？</h2>
-<div>
-    <h3>■遠隔監視サイトを表示</h3>
-    <h4>
-        <a class="btn btn-default" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-list"></span> サイト一覧を表示する</a>
-    </h4>
+<div>    
+    <div class="content container">
+        {% if request.user.is_authenticated %}
+        <h2>何を始めますか？</h2>
+        <div>
+            <h4>■遠隔監視サイトを表示</h4>
+            <h5>
+                <a class="btn btn-default" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-list"></span> サイト一覧を表示する</a>
+            </h5>        
+        </div>
+        <br>
+        <div>
+            <h4>■システム管理</h4>
+            <h5> 遠隔監視サイトを設定する</h5>
+            <h5> センサーの全体一覧を表示する</h5>
+        </div>
+        <br>
+        <div>
+            <h4>■システム開発の記録を閲覧</h4>
+            <h5>
+                <a  class="btn btn-default" href="{% url 'record:record_article' %}"><span class="glyphicon glyphicon-book"></span> 関連する参考記事を閲覧</a>
+            </h5>
+        </div>
+        {% else %}
+        <h2>「ログイン」または「ユーザー登録」が必要です！</h2>
+        <div>
+            <h3>ログイン</h3>
+            <a class="btn btn-default" href="{% url 'account_login' %}"><span class="glyphicon glyphicon-list"></span>ログイン画面へ</a>
+            <br>
+            <h3>ユーザー登録</h3>
+            <a class="btn btn-default" href="{% url 'account_signup' %}"><span class="glyphicon glyphicon-list"></span>サインアップ画面へ</a>        
+        </div>
+        {% endif %}        
+    </div>
 </div>
-<div>
-    <h3>■システム管理</h3>
-    <h4> 遠隔監視サイトを設定する</h4>
-    <h4> センサーの全体一覧を表示する</h4>
-</div>
-<div>
-    <h3>■システム開発の記録を閲覧</h3>
-    <h4>
-        <a  class="btn btn-default" href="{% url 'record:record_article' %}"><span class="glyphicon glyphicon-book"></span> 関連する参考記事を閲覧</a>
-    </h4>
-</div>
+
+
 {% endblock %}

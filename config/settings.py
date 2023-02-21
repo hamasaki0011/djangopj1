@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    'crispy_bootstrap5',  # Forgetting this was probably your error
     'main.apps.MainConfig',
     'record.apps.RecordConfig',
     "accounts",
@@ -165,4 +167,6 @@ ACCOUNT_LOGOUT_ON_GET = True
 # Emailをターミナルに表示する
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-
+# CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"

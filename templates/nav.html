@@ -1,11 +1,10 @@
-{% comment %} <nav class="navbar navbar-dark bg-primary"> {% endcomment %}
+<!-- <nav class="navbar navbar-dark bg-primary"></nav> -->
 <nav class="navbar navbar-light" style="background-color: #1c83e2;">
   <div class="container-fluid">
     <div>
-      <a class="navbar-brand" href="{% url 'main:main_index' %}">Home
+      <a class="navbar-brand" href="{% url 'main:main_index' %}"><small>Home</small>
         {% comment %} <img src="/media/pages/rmt_icon.png" style="width:50px;"/> {% endcomment %}
-        <i class="bi bi-house-door" style="font-size: 3rem; color: white;"></i>
-      
+        <i class="bi bi-house-door" style="font-size: 1.5rem; color: white;"></i>
       </a>
       {% comment %} ナビ左上のトグルボタン {% endcomment %}
       {% comment %} <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> {% endcomment %}
@@ -24,7 +23,7 @@
     <div class="flex-grow-1" style="max-width:350px;">
       <form class="d-flex" method="GET">
         <input class="form-control me-2" type="search" placeholder="検索..." aria-label="Search" name="search">
-        <button class="btn btn-outline-light" type="submit">検索</button>
+        <button class="btn btn-outline-light" type="submit">search</button>
       </form>
     </div>
     {% comment %} ドロップダウンボタンを指定 {% endcomment %}
@@ -43,6 +42,10 @@
             <li><a class="dropdown-item" href="#">ログイン</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">サインアップ</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'record:record_list' %}">開発記録一覧</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'record:record_create' %}">開発記録作成</a></li>
         {% endif %}
     </ul>
     </div>

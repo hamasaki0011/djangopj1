@@ -8,29 +8,51 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
         {% include "css.html" %}
+        {% block extra_css %}{% endblock %}
 
         {% comment %} 各ページのTitleを挿入する {% endcomment %}
         {% comment %} Origin were <title>Remote monitoring</title> {% endcomment %}
         <title>{% block title %}{% endblock %}</title>
+        
+        {% block extra_head %}{% endblock %}
 
     </head>
     <body>
         {% include "nav.html" %}
+
+        {% block allauth %}
+        {% if messages %}
+        <div>
+            <strong>Messages:</strong>
+            <ul>
+                {% for message in messages %}
+                <li>{{message}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% endblock %}
 
         <div class="page-header">
             <h1>遠隔監視システム</h1>
             <h5><span>現在時刻: </span><span id="realtime"></span></h5>
         </div>
 
-        <div class="content container">
-            <div class="row">
-                <div class="col-md-8">
-                {% block content %}
-                <!-- ここに主ページが入る -->
-                {% endblock %}
-            </div>
-        </div>
+        <!-- <div class="content container"> -->
+        <!-- <div class="row"> 右サイドにコンテンツ空間を確保する -->
+        <!-- <div class="col-md-8">  --><!-- bootstrapのグリッドシステム全部で合計12とｐなる-->
         
+            {% block content %}
+            <!-- ここに主ページが入る -->
+        {% endblock %}
+        
+        <!-- </div> -->
+        <!-- </div> -->
+        <!-- </div> -->
+        
+        {% block extra_body %}{% endblock %}
+
         {% include "footer.html" %}
         {% include "js.html" %}
+    </body>
 </html>
