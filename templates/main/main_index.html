@@ -27,13 +27,20 @@
             </h5>
         </div>
         {% else %}
-        <h2>「ログイン」または「ユーザー登録」が必要です！</h2>
+        <br>
         <div>
-            <h3>ログイン</h3>
-            <a class="btn btn-default" href="{% url 'account_login' %}"><span class="glyphicon glyphicon-list"></span>ログイン画面へ</a>
-            <br>
-            <h3>ユーザー登録</h3>
-            <a class="btn btn-default" href="{% url 'account_signup' %}"><span class="glyphicon glyphicon-list"></span>サインアップ画面へ</a>        
+            <h3>「ログイン」または「ユーザー登録」が必要です！</h3>
+        </div>
+        <br>
+        <div>
+            <h2>
+                <a class="btn btn-default" href="{% url 'account_login' %}"><span class="glyphicon glyphicon-list"></span>ログイン画面へ</a>
+            </h2>
+        </div>
+        <div>
+            <h2>
+                <a class="btn btn-default" href="{% url 'account_signup' %}"><span class="glyphicon glyphicon-list"></span>ユーザー登録画面へ</a>        
+            </h2>
         </div>
         {% endif %}        
     </div>

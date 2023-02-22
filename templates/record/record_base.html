@@ -1,25 +1,21 @@
 {% load static %}
 <html>
     <head>
-        <title>My First WEB application</title>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-        <link href='//fonts.googleapis.com/css?family=Gothic' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="{% static 'css/record.css' %}">
+        <title>Remote monitoring system' development record</title>
+        {% include "css.html" %}
     </head>
 
     <body>
+        {% include "nav.html" %}
         <div class="page-header">  
             <h1><a href="{% url 'main:main_index' %}">遠隔監視システム [開発記録画面]</a></h1>
         </div>
         <div class="content container">
-            <div class="row">
-                <div class="col-md-8">
-                {% block content %}
-                <!-- この中に各HTMLのbodyがはいる -->
-                {% endblock %}
-                </div>
-            </div>
+            {% block content %}
+            <!-- この中に各HTMLのbodyがはいる -->
+            {% endblock %}
         </div>
+        {% include "footer.html" %}
+        {% include "js.html" %}
     </body>
 </html>

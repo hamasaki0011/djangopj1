@@ -1,13 +1,15 @@
 from django.db import models
+from django.contrib.auth import get_user, get_user_model
 
-# Create your models here.
-from django.contrib import admin
-import datetime
+# from django.contrib import admin
+# import datetime
 from django.utils import timezone
 # import uuid
 # to embed a DB updating at 2022/11/10
 from django.urls import reverse
 from datetime import datetime as dt 
+
+User=get_user_model()
 
 class Location(models.Model):
     """ Location model """
@@ -15,18 +17,18 @@ class Location(models.Model):
         db_table='location'
         verbose_name='現場'
         verbose_name_plural='現場一覧'
-    # author=models.ForeignKey(
-    #     'auth.User',
-    #     on_delete=models.CASCADE,
-    # )
+    # author=models.ForeignKey('auth.User',on_delete=models.CASCADE)    
+    # CASCADE指定で、userデータが削除されたとき、locationデータも削除される
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
     name=models.CharField(verbose_name='現場', max_length=100)
     memo=models.CharField(verbose_name='メモ', max_length=500, default='',blank=True,null=True)
     created_date=models.DateTimeField(verbose_name='作成日', default=timezone.now)
-    updated_date=models.DateTimeField(verbose_name='更新日', default=timezone.now)
+    updated_date=models.DateTimeField(verbose_name='データ更新日', default=timezone.now)
     # updated_date=models.DateTimeField(verbose_name='更新日', blank=True, null=True)
 
     def __str__(self):
         return self.name
+    
 
     # @staticmethod
     # def get_absolute_url(self):

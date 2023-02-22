@@ -1,37 +1,47 @@
 from django.shortcuts import render, redirect
-# ページへのアクセスをログインユーザーのみに制限する
-# from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404
 from django.views import generic
-from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
-from django.utils import timezone
-from django.http import HttpResponseRedirect
 from .models import Location
-from .forms import LocationForm,LocationFormClass
+from .forms import LocationForm
+# ページへのアクセスをログインユーザーのみに制限する
+from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
+from django.contrib import messages
+
+# from django.http import Http404
+# from django.shortcuts import get_object_or_404, render
+# from django.utils import timezone
+# from django.http import HttpResponseRedirect
 # from .forms import SensorDeviceForm
 # from .models import MeasureData, SensorDevice
 # from .application import data_rw
 # for CSV file uploading
-import csv, io, datetime
-from django.http import HttpResponse 
+# import csv, io, datetime
+# from django.http import HttpResponse 
 # from sensor.forms import FileUploadForm
-import os
+# import os
 # import numpy as np
 # from sensor import addCsv, writeCsv
-import logging
+# import logging
 # embeded watchdog module
-import sys
-import time
+# import sys
+# import time
 # from watchdog.observers import Observer
 # from watchdog.events import RegexMatchingEventHandler
 # from watchdog.events import LoggingEventHandler
-
 
 # directory to store the uploading files
 # UPLOAD_DIR = os.path.join(os.path.dirname(__file__), '../static/upload/')
 # Define debug log-file
 # logger = logging.getLogger('development')
+
+class OwnerOnly(UserPassesTestMixin):
+    def test_func(self):
+        location_instance = self.get_object()
+        return location_instance.user == self.request.user
+    
+    def handle_no_permission(self):
+        messages.error(self.request,"You can edit and or delete only for your's.")
+        return redirect("main:location_detail", pk=self.kwargs["pk"])
 
 # Top view, you can select a target site for remote monitoring
 class IndexView(generic.TemplateView):
@@ -64,10 +74,16 @@ class LocationDetailView(generic.DetailView):
     #     return super().get_object()
 
 # Create a new site's information view
-class LocationCreateModelFormView(generic.CreateView):
+class LocationCreateModelFormView(LoginRequiredMixin,generic.CreateView):
     template_name = "main/location_form.html"
     form_class = LocationForm
     success_url = reverse_lazy("main:location_list")
+    
+    # user情報を取得する
+    def get_form_kwargs(self):
+        kwgs=super().get_form_kwargs()
+        kwgs["user"]=self.request.user
+        return kwgs
     
     # このviewではデータの取り込み、保存も一括して行われるので以下はいらない。  
     # # Received and saved data 
@@ -95,7 +111,7 @@ class LocationCreateModelFormView(generic.CreateView):
 #         return super().form_valid(form)
 
 # Update site's information
-class LocationUpdateModelFormView(generic.UpdateView):
+class LocationUpdateModelFormView(OwnerOnly,generic.UpdateView):
     template_name = "main/location_form.html"
     form_class = LocationForm
     success_url = reverse_lazy("main:location_list")
@@ -126,7 +142,7 @@ class LocationUpdateModelFormView(generic.UpdateView):
 
 # Delete site information
 # class LocationDeleteView(LoginRequiredMixin,generic.DeleteView):
-class LocationDeleteView(generic.DeleteView):
+class LocationDeleteView(OwnerOnly,generic.DeleteView):
     template_name = 'main/location_delete.html'
     model = Location
     # form_class=RecordForm

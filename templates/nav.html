@@ -19,35 +19,52 @@
       {% comment %} </div> {% endcomment %}
 
     </div>
-    {% comment %} 検索バーを指定 {% endcomment %}
+    {% comment %} 
+    検索バーを指定 
     <div class="flex-grow-1" style="max-width:350px;">
       <form class="d-flex" method="GET">
         <input class="form-control me-2" type="search" placeholder="検索..." aria-label="Search" name="search">
         <button class="btn btn-outline-light" type="submit">search</button>
       </form>
     </div>
+    {% endcomment %}
     {% comment %} ドロップダウンボタンを指定 {% endcomment %}
     <div class="text-light nav-item dropdown">
-      <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+      {% load accounts_user %}
+      <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        {{ request.user|user_display}}
+      </a>
       <ul class="dropdown-menu endposition" aria-labelledby="navbarDropdown">
         {% if request.user.is_authenticated %}
-            <li><a class="dropdown-item" href="#">アカウント設定</a></li>
+
+            <li><a class="dropdown-item" href="#">
+              アカウント設定</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">ログアウト</a></li>
+            <li><a class="dropdown-item" href="{% url 'account_logout' %}">
+              ログアウト</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{% url 'record:record_list' %}">開発記録一覧</a></li>
+            <li><a class="dropdown-item" href="{% url 'record:record_list' %}">
+              開発記録一覧</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{% url 'record:record_create' %}">開発記録作成</a></li>
+            <li><a class="dropdown-item" href="{% url 'record:record_create' %}">
+              開発記録作成</a></li>
+
         {% else %}
-            <li><a class="dropdown-item" href="#">ログイン</a></li>
+
+            <li><a class="dropdown-item" href="{% url 'account_login' %}">
+              ログイン</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">サインアップ</a></li>
+            <li><a class="dropdown-item" href="{% url 'account_signup' %}">
+              サインアップ</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{% url 'record:record_list' %}">開発記録一覧</a></li>
+            <li><a class="dropdown-item" href="{% url 'record:record_list' %}">
+              開発記録一覧</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{% url 'record:record_create' %}">開発記録作成</a></li>
+            <li><a class="dropdown-item" href="{% url 'record:record_create' %}">
+              開発記録作成</a></li>
+
         {% endif %}
-    </ul>
+      </ul>
     </div>
   </div>
 </nav>

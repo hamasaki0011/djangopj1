@@ -11,12 +11,24 @@ class LocationForm(forms.ModelForm):
     class Meta:
         model=Location
         # fields="__all__"
-        fields=('name','memo',)
-        
-    def __init__(self, *args, **kwargs):
+        # fields=('name','memo',)
+        exclude=["user"]
+    
+    # viewで取得したuser情報を受け取る    
+    def __init__(self,user=None, *args, **kwargs):
         for field in self.base_fields.values():
             field.widget.attrs.update({"class":"form-control"})
+        self.user=user
         super().__init__(*args, **kwargs)
+    
+    # 受け取ったuser情報を保存する
+    def save(self,commit=True):
+        location_obj=super().save(commit=False)
+        if self.user:
+            location_obj.user=self.user
+        if commit:
+            location_obj.save()
+        return location_obj
         
 class LocationFormClass(forms.Form):
     name = forms.CharField()
