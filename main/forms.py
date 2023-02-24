@@ -1,12 +1,12 @@
 from django import forms
-from .models import Location
-# from .models import SensorDevice
+from .models import Location,Sensors
 # from .models import MeasureData
 # import os
 # import io, csv
 # from django.core.exceptions import ValidationError
 # VALID_EXTENSIONS=['.csv']
 
+# Location model form
 class LocationForm(forms.ModelForm):
     class Meta:
         model=Location
@@ -29,7 +29,8 @@ class LocationForm(forms.ModelForm):
         if commit:
             location_obj.save()
         return location_obj
-        
+
+# LocationForm class        
 class LocationFormClass(forms.Form):
     name = forms.CharField()
     memo = forms.CharField(widget=forms.Textarea())
@@ -39,12 +40,33 @@ class LocationFormClass(forms.Form):
     #         field.widget.attrs.update({"class":"form-control"})
     #     super().__init__(*args, **kwargs)
 
-# class SensorDeviceForm(forms.ModelForm):
-#     class Meta:
-#         model=SensorDevice
-#         fields=(
-#             'device', 'note',
-#         )
+# Sensors model form
+class SensorsForm(forms.ModelForm):
+    class Meta:
+        model=Sensors
+        # fields=('device', 'note',)
+        fields="__all__"
+        # exclude=["place"]
+
+    # # viewで取得したplace情報を受け取る    
+    def __init__(self,place=None, *args, **kwargs):
+        for field in self.base_fields.values():
+            field.widget.attrs.update({"class":"form-control"})
+        self.place=place
+        super().__init__(*args, **kwargs)
+    
+    # # 受け取ったuser情報を保存する
+    # def save(self,commit=True):
+    #     sensors_obj=super().save(commit=False)
+    #     if self.place:
+    #         sensors_obj.place=self.place
+    #     if commit:
+    #         sensors_obj.save()
+    #     return sensors_obj
+class SensorsFormClass(forms.Form):
+    name = forms.CharField()
+    memo = forms.CharField(widget=forms.Textarea())
+
 
 # class MeasureDataForm(forms.ModelForm):
 #     class Meta:

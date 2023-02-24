@@ -6,23 +6,32 @@ app_name='main'
 urlpatterns=[
     # Top view
     path('', views.IndexView.as_view(), name='main_index'),
-    # Site arrangement view
+    # Location list view
     path('list', views.LocationListView.as_view(), name='location_list'),
     # Detail view
     path('detail/<int:pk>/', views.LocationDetailView.as_view(), name='location_detail'),
-
-    # Create view
+    # Location create view
     path('create/', views.LocationCreateModelFormView.as_view(), name='location_create'),
     # path('create/', views.LocationCreateView.as_view(), name='location_create'),
     # path("create/", views.LocationCreateFormView.as_view(), name="location_create"),
-    
-    # Update view
+    # Location update view
     path('update/<int:pk>/', views.LocationUpdateModelFormView.as_view(), name='location_update'),
     # path('update/<int:pk>/', views.LocationUpdateView.as_view(), name='location_update'),
     
-    # Delete view
+    # Location delete view
     path('delete/<int:pk>/', views.LocationDeleteView.as_view(), name='location_delete'),
     # path('delete/<int:pk>/', views.LocationDeleteView.as_view(), name='location_delete_modal'),
+    
+    # Sensors list view
+    path('sensors/list', views.SensorsListView.as_view(), name='sensors_list'),
+    # Sensors detail view
+    path('sensors/detail/<int:pk>/', views.SensorsDetailView.as_view(), name='sensors_detail'),
+    # Sensors create view
+    path('sensors/create/', views.SensorsCreateModelFormView.as_view(), name='sensors_create'),
+    # Sensors update view
+    path('sensors/update/<int:pk>/', views.SensorsUpdateModelFormView.as_view(), name='sensors_update'),
+    # Sensor's delete view
+    path('sensors/delete/<int:pk>/', views.SensorsDeleteView.as_view(), name='sensors_delete'),
     
     # # Display path root for all sensor devices belong in each site/location
     # path('sensor/device/list/<int:pk>/', views.SensorDeviceListView.as_view(), name='sensor_device_list'),

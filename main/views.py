@@ -1,15 +1,15 @@
 from django.shortcuts import render, redirect
 from django.views import generic
 from django.urls import reverse_lazy
-from .models import Location
-from .forms import LocationForm
+from .models import Location,Sensors
+from .forms import LocationForm,SensorsForm
 # ページへのアクセスをログインユーザーのみに制限する
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.contrib import messages
+from django.utils import timezone
 
 # from django.http import Http404
 # from django.shortcuts import get_object_or_404, render
-# from django.utils import timezone
 # from django.http import HttpResponseRedirect
 # from .forms import SensorDeviceForm
 # from .models import MeasureData, SensorDevice
@@ -40,14 +40,15 @@ class OwnerOnly(UserPassesTestMixin):
         return location_instance.user == self.request.user
     
     def handle_no_permission(self):
-        messages.error(self.request,"You can edit and or delete only for your's.")
+        messages.error(self.request,"You can edit and delete only for your's.")
         return redirect("main:location_detail", pk=self.kwargs["pk"])
 
+# -----------------------------------------------------------------
 # Top view, you can select a target site for remote monitoring
 class IndexView(generic.TemplateView):
     template_name='main/main_index.html'
-
-# Site's list view 
+# -----------------------------------------------------------------
+# Locations' list view 
 class LocationListView(generic.ListView):
     template_name='main/location_list.html'
     model=Location
@@ -65,25 +66,25 @@ class LocationListView(generic.ListView):
         qs = qs.order_by("created_date")[:7]
         return qs
 # -----------------------------------------------------------------
-# Site's detail information view of each site
+# Each location's detail information view
 class LocationDetailView(generic.DetailView):
     template_name='main/location_detail.html'
     model=Location
     
     # def get_object(self):
     #     return super().get_object()
-
-# Create a new site's information view
+# -----------------------------------------------------------------
+# Create a new location's information view
 class LocationCreateModelFormView(LoginRequiredMixin,generic.CreateView):
     template_name = "main/location_form.html"
     form_class = LocationForm
     success_url = reverse_lazy("main:location_list")
     
     # user情報を取得する
-    def get_form_kwargs(self):
-        kwgs=super().get_form_kwargs()
-        kwgs["user"]=self.request.user
-        return kwgs
+    # def get_form_kwargs(self):
+    #     kwgs=super().get_form_kwargs()
+    #     kwgs["user"]=self.request.user
+    #     return kwgs
     
     # このviewではデータの取り込み、保存も一括して行われるので以下はいらない。  
     # # Received and saved data 
@@ -95,7 +96,6 @@ class LocationCreateModelFormView(LoginRequiredMixin,generic.CreateView):
 
 # Another way to create
 # class LocationCreateView(LoginRequiredMixin,generic.CreateView):
-# class LocationCreateView(generic.CreateView):
 #     template_name='main/location_create.html'
 #     # model=Location
 #     form_class=LocationForm
@@ -110,7 +110,8 @@ class LocationCreateModelFormView(LoginRequiredMixin,generic.CreateView):
 #         location.save()
 #         return super().form_valid(form)
 
-# Update site's information
+# -----------------------------------------------------------------
+# Update location's information
 class LocationUpdateModelFormView(OwnerOnly,generic.UpdateView):
     template_name = "main/location_form.html"
     form_class = LocationForm
@@ -137,17 +138,112 @@ class LocationUpdateModelFormView(OwnerOnly,generic.UpdateView):
 #         location.updated_date = timezone.now()
 #         location.save()
 #         return super().form_valid(form)
-
 # -----------------------------------------------------------------
-
-# Delete site information
-# class LocationDeleteView(LoginRequiredMixin,generic.DeleteView):
+# Delete location information
 class LocationDeleteView(OwnerOnly,generic.DeleteView):
     template_name = 'main/location_delete.html'
     model = Location
-    # form_class=RecordForm
+    # form_class=LocationForm
     success_url = reverse_lazy('main:location_list')
+# -----------------------------------------------------------------
+# Sensors' list view 
+class SensorsListView(generic.ListView):
+    template_name='main/sensor_list.html'
+    model=Sensors
 
+    # user情報を取得する
+    # def get_form_kwargs(self):
+    #     kwgs=super().get_form_kwargs()
+    #     kwgs["user"]=self.request.user
+    #     return kwgs
+    
+    # def get_queryset(self):
+    #     qs = Sensors.objects.all()
+    #     # ユーザーがログインしていれば、リストを表示する
+    #     # q = self.request.GET.get("search")
+    #     # qs = Record.objects.search(query=q)
+    #     # if self.request.user.is_authenticated:
+    #     #     qs = qs.filter(Q(public=True)|Q(user=self.request.user))
+    #     # else:
+    #     #     qs = qs.filter(public=True)
+    #     # # the selected records are re-ordered  by "created_date"         
+    #     # qs = qs.order_by("created_date")[:7]
+    #     return qs
+# -----------------------------------------------------------------
+# Each Sensors's detail information view
+class SensorsDetailView(generic.DetailView):
+    template_name='main/sensors_detail.html'
+    model=Sensors
+# -----------------------------------------------------------------
+# Create a new Sensor place information view
+class SensorsCreateModelFormView(generic.CreateView):
+    template_name = "main/sensors_create.html"
+    form_class = SensorsForm
+    success_url = reverse_lazy("main:sensors_list")
+    
+    # place情報を取得する
+    # def get_form_kwargs(self):
+    #     kwgs=super().get_form_kwargs()
+    #     kwgs["place"]=self.place
+    #     return kwgs
+    
+    # このviewではデータの取り込み、保存も一括して行われるので以下はいらない。  
+    # # Received and saved data 
+    # def form_valid(self, form):
+    #     data = form.cleaned_data    # 入力したデータを辞書型で取り出す
+    #     obj=Location(**data)        # 入力したデータでオブジェクトを作成し保存する
+    #     obj.save()
+    #     return super().form_valid(form)
+# Another way to create
+# # class SensorsCreateView(LoginRequiredMixin,generic.CreateView):
+# class SensorsCreateView(generic.CreateView):
+#     template_name='main/sensors_create.html'
+#     model=Sensors
+#     # form_class=LocationForm
+#     success_url=reverse_lazy('main:sensors_list')
+    
+#     # Received and saved data 
+#     def form_valid(self, form):
+#         sensors = form.save(commit=False)
+#         # sensors.author = self.request.user
+#         sensors.crteated_date = timezone.now()
+#         sensors.updated_date = timezone.now()
+#         sensors.save()
+#         return super().form_valid(form)
+# -----------------------------------------------------------------
+# Update location's information
+class SensorsUpdateModelFormView(generic.UpdateView):
+    template_name = "main/sensors_update.html"
+    form_class = SensorsForm
+    success_url = reverse_lazy("main:sensors_list")
+    
+    # Following get_querryset() is mondatly requrered.
+    # in order to get place data
+    def get_queryset(self):
+        return Sensors.objects.all()
+# Another way
+# class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
+# class LocationUpdateView(generic.UpdateView):
+#     template_name = 'main/location_update.html'
+#     model = Location
+#     # form_class = LocationForm
+#     fields = ('name', 'memo',)
+#     success_url = reverse_lazy('main:location_list')
+ 
+#     def form_valid(self, form):
+#         location = form.save(commit=False)
+#         # location.author = self.request.user
+#         location.updated_date = timezone.now()
+#         location.save()
+#         return super().form_valid(form)
+# -----------------------------------------------------------------
+# Delete Sensor information
+class SensorsDeleteView(generic.DeleteView):
+    template_name = 'main/sensors_delete.html'
+    model = Sensors
+    # form_class=LocationForm
+    success_url = reverse_lazy('main:sensors_list')
+# -----------------------------------------------------------------
 # List view for sensor devices at each site
 # class SensorDeviceListView(generic.ListView):
 #     # template_name='sensor/sensor_device_list.html'
@@ -292,14 +388,6 @@ class LocationDeleteView(OwnerOnly,generic.DeleteView):
 #     #  model=SensorDevice
 #     #  template_name= 'sensor/detail.html'    
 
-# class LocationListView(generic.ListView):
-#     template_name='sensor/location_list.html'
-#     model=Location
-
-# class LocationDetailView(generic.DetailView):
-#     template_name='sensor/location_detail.html'
-#     model=Location
-
 # class SensorListView(generic.ListView):
 #     template_name='sensor/sensor_list.html'
 #     model=SensorDevice
@@ -338,33 +426,6 @@ class LocationDeleteView(OwnerOnly,generic.DeleteView):
 #     # except SensorDevice.DoesNotExist:
 #     #     raise Http404("SensorDevice does not exist")
 #     # return render(request, 'sensor/detail.html', {'device': device })
-
-# class LocationSettingView(generic.CreateView):
-#     template_name='location_setting.html'
-#     form_class=LocationForm
-#     success_url=reverse_lazy('sensor:location_setting_done')
-
-# class LocationSettingDoneView(generic.TemplateView):
-#     template_name='location_setting_done.html'
-
-# class LocationUpdateView(generic.UpdateView):
-#     template_name = 'location_update.html'
-#     model = Location
-#     fields = (
-#         'name', 'memo','author',
-#     )
-#     success_url = reverse_lazy('sensor:location_list')
-
-#     def form_valid(self, form):
-#         location = form.save(commit=False)
-#         location.updated_at = timezone.now()
-#         location.save()
-#         return super().form_valid(form)
-
-# class LocationDeleteView(generic.DeleteView):
-#     template_name = 'location_delete.html'
-#     model = Location
-#     success_url = reverse_lazy('sensor:location_list')
 
 # def results(request, location_id):
 #     response = "You're looking at the results of question %s."

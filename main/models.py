@@ -11,6 +11,7 @@ from datetime import datetime as dt
 
 User=get_user_model()
 
+# Location model
 class Location(models.Model):
     """ Location model """
     class Meta:
@@ -29,23 +30,26 @@ class Location(models.Model):
     def __str__(self):
         return self.name
     
-
     # @staticmethod
     # def get_absolute_url(self):
     #     return reverse('main:index')
 
-# class SensorDevice(models.Model):
-#     class Meta:
-#         db_table='sensordevice'
-#         unique_together=(('site','device'),)
-#     site=models.ForeignKey(Location, verbose_name='現場', on_delete=models.PROTECT)
-#     device=models.CharField(verbose_name='センサー', max_length=127, default='', null=True)
-#     note=models.CharField(verbose_name='補足', max_length=255, default='',blank=True)
-#     created_at=models.DateTimeField(verbose_name='登録日', auto_now_add=True)
-#     updated_at=models.DateTimeField(verbose_name='更新日', auto_now=True)
+# Sensors model
+class Sensors(models.Model):
+    class Meta:
+        db_table='sensors'
+        unique_together=(('place','device'),)
+        verbose_name='センサー'
+        verbose_name_plural='センサー一覧'
     
-#     def __str__(self):
-#         return self.device 
+    place=models.ForeignKey(Location, verbose_name='現場', on_delete=models.PROTECT)
+    device=models.CharField(verbose_name='センサー', max_length=127,default='',blank=True,null=True)
+    note=models.CharField(verbose_name='補足', max_length=255,default='',blank=True,null=True)
+    created_date=models.DateTimeField(verbose_name='登録日',default=timezone.now)
+    updated_date=models.DateTimeField(verbose_name='更新日',default=timezone.now)
+    
+    def __str__(self):
+        return self.device 
 
 # class MeasureData(models.Model):
 #     """ Meteorological data model """
