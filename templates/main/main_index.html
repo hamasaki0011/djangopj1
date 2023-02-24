@@ -3,50 +3,54 @@
 {% block title %}Remote Monitoring System{% endblock %}
 
 {% block content %}
-<div>    
-    <div class="content container">
-        {% if request.user.is_authenticated %}
+<div class="container">
+    {% if request.user.is_authenticated %}
         <h2>何を始めますか？</h2>
         <div>
             <h4>■遠隔監視サイトを表示</h4>
-            <h5>
-                <a class="btn btn-default" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-list"></span> サイト一覧を表示する</a>
-            </h5>
-            <h5>
-                <a class="btn btn-default" href="{% url 'main:sensors_list' %}"><span class="glyphicon glyphicon-list"></span> センサー一覧を表示する</a>
-            </h5>                
+            <h6>
+                <a class="form-control btn btn-info" href="{% url 'main:main_list' %}"><span class="glyphicon glyphicon-list"></span> センサー一覧を表示</a>
+            </h6>                
         </div>
         <br>
         <div>
             <h4>■システム管理</h4>
-            <h5> 遠隔監視サイトを設定する</h5>
+            <h5> 遠隔監視サイトを編集する</h5>
+            <h6>
+                <a class="form-control btn btn-info" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-list"></span> サイトの一覧を表示</a>
+            </h6>
             <h5> センサーの全体一覧を表示する</h5>
+            <h6>
+                <a class="form-control btn btn-info" href="{% url 'main:sensors_list' %}"><span class="glyphicon glyphicon-list"></span> センサーの全体一覧を表示</a>
+            </h6>                
+
         </div>
         <br>
         <div>
             <h4>■システム開発の記録を閲覧</h4>
             <h5>
-                <a  class="btn btn-default" href="{% url 'record:record_article' %}"><span class="glyphicon glyphicon-book"></span> 関連する参考記事を閲覧</a>
+                <a  class="form-control btn btn-secondary" href="{% url 'record:record_article' %}"><span class="glyphicon glyphicon-book"></span> 関連する参考記事を閲覧</a>
             </h5>
         </div>
-        {% else %}
         <br>
-        <div>
-            <h3>「ログイン」または「ユーザー登録」が必要です！</h3>
+
+    {% else %}
+        <div class ='form-control'>
+            <h4>「ログイン」または「ユーザー登録」が必要です！</h4>
         </div>
         <br>
         <div>
             <h2>
-                <a class="btn btn-default" href="{% url 'account_login' %}"><span class="glyphicon glyphicon-list"></span>ログイン画面へ</a>
+                <a class="form-control btn btn-primary" href="{% url 'account_login' %}"><span class="glyphicon glyphicon-list"></span>ログイン画面へ</a>
             </h2>
         </div>
         <div>
             <h2>
-                <a class="btn btn-default" href="{% url 'account_signup' %}"><span class="glyphicon glyphicon-list"></span>ユーザー登録画面へ</a>        
+                <a class="form-control btn btn-primary" href="{% url 'account_signup' %}"><span class="glyphicon glyphicon-list"></span>ユーザー登録画面へ</a>        
             </h2>
         </div>
-        {% endif %}        
-    </div>
+
+    {% endif %}        
 </div>
 
 

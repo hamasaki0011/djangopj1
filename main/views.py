@@ -11,7 +11,6 @@ from django.utils import timezone
 # from django.http import Http404
 # from django.shortcuts import get_object_or_404, render
 # from django.http import HttpResponseRedirect
-# from .forms import SensorDeviceForm
 # from .models import MeasureData, SensorDevice
 # from .application import data_rw
 # for CSV file uploading
@@ -243,6 +242,50 @@ class SensorsDeleteView(generic.DeleteView):
     model = Sensors
     # form_class=LocationForm
     success_url = reverse_lazy('main:sensors_list')
+# -----------------------------------------------------------------
+# View of main list 
+class MainListView(generic.ListView):
+    template_name='main/main_list.html'
+    model=Sensors
+    
+    # place情報を取得する
+    # その前にA社(id=1)のデータのみ呼び出す。
+     # in this case, "pk" indicates place_id
+    def get_queryset(self):
+        qs = Sensors.objects.all()
+        id=1
+        sensors_list=qs.filter(place_id=id)
+        return sensors_list
+        
+        # user_obj = self.request.user
+        # if user.is_authenticated:
+        #     qs = Sensors.objects.all()
+        #     id=1
+        #     sensors_list=qs.filter(place_id=id)
+        #     return sensors_list
+        # else:
+        #     qs = Sensors.objects.none()
+        #     return qs
+
+    # user情報を取得する
+    # def get_form_kwargs(self):
+    #     kwgs=super().get_form_kwargs()
+    #     kwgs["user"]=self.user
+    #     return kwgs
+
+    # def get_queryset(self):
+    #     # まずは、A社みのリストを表示する
+    #     # q = self.request.GET.get("search")
+    #     # qs = Record.objects.search(query=q)
+    #     # if self.request.user.is_authenticated:
+    #     #     qs = qs.filter(Q(public=True)|Q(user=self.request.user))
+    #     # else:
+    #     #     qs = qs.filter(public=True)
+    #     # # the selected records are re-ordered  by "created_date"         
+    #     # qs = qs.order_by("created_date")[:7]
+    #     return qs
+    
+
 # -----------------------------------------------------------------
 # List view for sensor devices at each site
 # class SensorDeviceListView(generic.ListView):

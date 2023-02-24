@@ -4,23 +4,18 @@ from . import views
 
 app_name='main'
 urlpatterns=[
-    # Top view
+    # Top index view
     path('', views.IndexView.as_view(), name='main_index'),
     # Location list view
-    path('list', views.LocationListView.as_view(), name='location_list'),
+    path('location/list', views.LocationListView.as_view(), name='location_list'),
     # Detail view
-    path('detail/<int:pk>/', views.LocationDetailView.as_view(), name='location_detail'),
+    path('location/detail/<int:pk>/', views.LocationDetailView.as_view(), name='location_detail'),
     # Location create view
-    path('create/', views.LocationCreateModelFormView.as_view(), name='location_create'),
-    # path('create/', views.LocationCreateView.as_view(), name='location_create'),
-    # path("create/", views.LocationCreateFormView.as_view(), name="location_create"),
+    path('location/create/', views.LocationCreateModelFormView.as_view(), name='location_create'),
     # Location update view
-    path('update/<int:pk>/', views.LocationUpdateModelFormView.as_view(), name='location_update'),
-    # path('update/<int:pk>/', views.LocationUpdateView.as_view(), name='location_update'),
-    
+    path('location/update/<int:pk>/', views.LocationUpdateModelFormView.as_view(), name='location_update'),    
     # Location delete view
-    path('delete/<int:pk>/', views.LocationDeleteView.as_view(), name='location_delete'),
-    # path('delete/<int:pk>/', views.LocationDeleteView.as_view(), name='location_delete_modal'),
+    path('location/delete/<int:pk>/', views.LocationDeleteView.as_view(), name='location_delete'),
     
     # Sensors list view
     path('sensors/list', views.SensorsListView.as_view(), name='sensors_list'),
@@ -32,6 +27,10 @@ urlpatterns=[
     path('sensors/update/<int:pk>/', views.SensorsUpdateModelFormView.as_view(), name='sensors_update'),
     # Sensor's delete view
     path('sensors/delete/<int:pk>/', views.SensorsDeleteView.as_view(), name='sensors_delete'),
+    
+    # Main List view
+    path('list/', views.MainListView.as_view(), name='main_list'),
+    
     
     # # Display path root for all sensor devices belong in each site/location
     # path('sensor/device/list/<int:pk>/', views.SensorDeviceListView.as_view(), name='sensor_device_list'),
