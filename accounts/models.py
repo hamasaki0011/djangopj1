@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.db.models.signals import post_save
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -32,7 +33,7 @@ class UserManager(BaseUserManager):
         user.admin = True
         user.save(using=self._db)
         return user
-
+    
 class User(AbstractBaseUser):
     email = models.EmailField(
         verbose_name='Eメールアドレス',
@@ -68,3 +69,20 @@ class User(AbstractBaseUser):
     @property
     def is_active(self):
         return self.active
+    
+class Profile(models.Model):      
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    username = models.CharField(max_length=100, verbose_name="ユーザー名")
+    company = models.CharField(max_length=100, blank=True, null=True, verbose_name="会社名")
+    phone_number = models.IntegerField(blank=True, null=True, verbose_name="連絡先")
+
+    def __str__(self):
+        return self.username
+    
+def post_user_created(sender, instance, created, **kwargs):
+    if created:
+        profile_obj = Profile(user=instance)
+        profile_obj.username = instance.email
+        profile_obj.save()
+
+post_save.connect(post_user_created, sender=User)

@@ -248,33 +248,26 @@ class MainListView(generic.ListView):
     template_name='main/main_list.html'
     model=Sensors
     
+    # ログインユーザーの情報を取得する
+    def get_form_kwargs(self):
+        kwgs=super().get_form_kwargs()
+        kwgs["user"]=self.user
+        return kwgs
     # place情報を取得する
-    # その前にA社(id=1)のデータのみ呼び出す。
-     # in this case, "pk" indicates place_id
+    # querysetにA社(id=1)条件でフィルターをかけて上書き
     def get_queryset(self):
-        qs = Sensors.objects.all()
-        id=1
-        sensors_list=qs.filter(place_id=id)
+        if self.request.user.is_authenticated:
+            sensors_list=Sensors.objects.all()
+            if self.request.user.is_admin:
+                sensors_list=Sensors.objects.all()
+            else:
+                id=1
+                sensors_list=Sensors.objects.filter(place_id=id)
+        else:
+            sensors_list=None
         return sensors_list
-        
-        # user_obj = self.request.user
-        # if user.is_authenticated:
-        #     qs = Sensors.objects.all()
-        #     id=1
-        #     sensors_list=qs.filter(place_id=id)
-        #     return sensors_list
-        # else:
-        #     qs = Sensors.objects.none()
-        #     return qs
-
-    # user情報を取得する
-    # def get_form_kwargs(self):
-    #     kwgs=super().get_form_kwargs()
-    #     kwgs["user"]=self.user
-    #     return kwgs
 
     # def get_queryset(self):
-    #     # まずは、A社みのリストを表示する
     #     # q = self.request.GET.get("search")
     #     # qs = Record.objects.search(query=q)
     #     # if self.request.user.is_authenticated:
@@ -284,7 +277,6 @@ class MainListView(generic.ListView):
     #     # # the selected records are re-ordered  by "created_date"         
     #     # qs = qs.order_by("created_date")[:7]
     #     return qs
-    
 
 # -----------------------------------------------------------------
 # List view for sensor devices at each site

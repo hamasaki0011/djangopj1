@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,include
 from . import views
 # from .views import LocationCreateFormView
 
@@ -31,6 +31,7 @@ urlpatterns=[
     # Main List view
     path('list/', views.MainListView.as_view(), name='main_list'),
     
+    path("profile/", include("accounts.urls")),
     
     # # Display path root for all sensor devices belong in each site/location
     # path('sensor/device/list/<int:pk>/', views.SensorDeviceListView.as_view(), name='sensor_device_list'),

@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -167,6 +166,9 @@ ACCOUNT_LOGOUT_ON_GET = True
 # Emailをターミナルに表示する
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+ACCOUNT_ADAPTER = "accounts.adapter.ProfileAdapter"
+
 # CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
