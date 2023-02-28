@@ -6,8 +6,14 @@ app_name='main'
 urlpatterns=[
     # Top index view
     path('', views.IndexView.as_view(), name='main_index'),
+    # Main List view
+    path('list/', views.MainListView.as_view(), name='main_list'),
+    # Main detail view
+    path('detail/<int:pk>/', views.MainDetailView.as_view(), name='main_detail'),
     # Location list view
     path('location/list', views.LocationListView.as_view(), name='location_list'),
+    # Location list view
+    # path('location/select', views.LocationSelectView.as_view(), name='location_select'),
     # Detail view
     path('location/detail/<int:pk>/', views.LocationDetailView.as_view(), name='location_detail'),
     # Location create view
@@ -27,9 +33,6 @@ urlpatterns=[
     path('sensors/update/<int:pk>/', views.SensorsUpdateModelFormView.as_view(), name='sensors_update'),
     # Sensor's delete view
     path('sensors/delete/<int:pk>/', views.SensorsDeleteView.as_view(), name='sensors_delete'),
-    
-    # Main List view
-    path('list/', views.MainListView.as_view(), name='main_list'),
     
     path("profile/", include("accounts.urls")),
     

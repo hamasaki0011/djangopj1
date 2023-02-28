@@ -5,25 +5,32 @@
 {% block content %}
 <div class="container">
     {% if request.user.is_authenticated %}
-        <h2>何を始めますか？</h2>
+    <br>    
+    <div>
+        <h4>■遠隔監視サイトを表示</h4>
+        <h6>遠隔監視サイトを選択してください。</h6>
         <div>
-            <h4>■遠隔監視サイトを表示</h4>
-            <h6>
-                <a class="form-control btn btn-info" href="{% url 'main:main_list' %}"><span class="glyphicon glyphicon-list"></span> センサー一覧を表示</a>
-            </h6>                
+            {% for location in location_list %}
+            <h3>
+                <a class="form-control btn btn-info" href="{% url 'main:main_detail' location.pk %}">{{ location.name }}</a>
+            </h3>
+            <p>【Memo】{{ location.memo }}</p>
+            {% endfor %}    
         </div>
-        <br>
         <div>
             <h4>■システム管理</h4>
             <h5> 遠隔監視サイトを編集する</h5>
             <h6>
-                <a class="form-control btn btn-info" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-list"></span> サイトの一覧を表示</a>
+                <a class="form-control btn btn-danger" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-list"></span> サイトの一覧を表示</a>
             </h6>
             <h5> センサーの全体一覧を表示する</h5>
             <h6>
-                <a class="form-control btn btn-info" href="{% url 'main:sensors_list' %}"><span class="glyphicon glyphicon-list"></span> センサーの全体一覧を表示</a>
-            </h6>                
-
+                <a class="form-control btn btn-warning" href="{% url 'main:sensors_list' %}"><span class="glyphicon glyphicon-list"></span> センサーの全体一覧を表示</a>
+            </h6>
+            <p>上と下どちらを残すか？後で決める</p>
+            <h6>
+                <a class="form-control btn btn-light" href="{% url 'main:main_list' %}"><span class="glyphicon glyphicon-list"></span> センサー一覧を表示</a>
+            </h6>               
         </div>
         <br>
         <div>
@@ -33,7 +40,6 @@
             </h5>
         </div>
         <br>
-
     {% else %}
         <div class ='form-control'>
             <h4>「ログイン」または「ユーザー登録」が必要です！</h4>

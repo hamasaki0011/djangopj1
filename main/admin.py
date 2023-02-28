@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Location,Sensors
+from .models import Location,Sensors,Result
 # from django.contrib import SensorsAdmin
 
 class SensorsInline(admin.TabularInline):
@@ -18,3 +18,22 @@ admin.site.register(Location, LocationAdmin)
 # admin.site.register(Location)
 
 admin.site.register(Sensors)
+
+class ResultInline(admin.TabularInline):
+    model=Result
+    extra=0
+
+class ResultAdmin(admin.ModelAdmin):
+    fields = ['place','point', 'measured_value', 'measured_date',]
+    # fieldsets = [
+    #     ('現場', {'fields': ['place']}),
+    #     ('センサー', {'fields': ['point']}),
+    #     ('測定日時', {'fields': ['measured_at']}),
+    #     ('測定値', {'fields': ['data_value']}),
+    # ]
+    # inlines=[MeasureDataInline]
+    list_display = ('place','point', 'measured_date', 'measured_value', 'was_measured_recently')
+    list_filter=['measured_date', 'point',]
+    # search_fields=['site']
+
+admin.site.register(Result, ResultAdmin)

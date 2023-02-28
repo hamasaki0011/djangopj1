@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import generic
 from django.urls import reverse_lazy
-from .models import Location,Sensors
+from .models import Location,Sensors,Result
 from .forms import LocationForm,SensorsForm
 # ページへのアクセスをログインユーザーのみに制限する
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
@@ -32,7 +32,6 @@ from django.utils import timezone
 # UPLOAD_DIR = os.path.join(os.path.dirname(__file__), '../static/upload/')
 # Define debug log-file
 # logger = logging.getLogger('development')
-
 class OwnerOnly(UserPassesTestMixin):
     def test_func(self):
         location_instance = self.get_object()
@@ -41,11 +40,164 @@ class OwnerOnly(UserPassesTestMixin):
     def handle_no_permission(self):
         messages.error(self.request,"You can edit and delete only for your's.")
         return redirect("main:location_detail", pk=self.kwargs["pk"])
-
 # -----------------------------------------------------------------
 # Top view, you can select a target site for remote monitoring
-class IndexView(generic.TemplateView):
+class IndexView(generic.ListView):
     template_name='main/main_index.html'
+    model=Location
+    # 2023.2.28　メモ
+    # ユーザー情報の取得と取得したキーでフィルターをかけた
+    # クエリー取得を書く
+# -----------------------------------------------------------------
+# View of main list 
+class MainListView(generic.ListView):
+    template_name='main/main_list.html'
+    model=Sensors
+    
+    # ログインユーザーの情報を取得する
+    def get_form_kwargs(self):
+        kwgs=super().get_form_kwargs()
+        kwgs["user"]=self.user
+        return kwgs
+    # place情報を取得する
+    # querysetにA社(id=1)条件でフィルターをかけて上書き
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            sensors_list=Sensors.objects.all()
+            if self.request.user.is_admin:
+                sensors_list=Sensors.objects.all()
+            else:
+                id=1
+                sensors_list=Sensors.objects.filter(place_id=id)
+        else:
+            sensors_list=None
+        return sensors_list
+
+    # def get_queryset(self):
+    #     # q = self.request.GET.get("search")
+    #     # qs = Record.objects.search(query=q)
+    #     # if self.request.user.is_authenticated:
+    #     #     qs = qs.filter(Q(public=True)|Q(user=self.request.user))
+    #     # else:
+    #     #     qs = qs.filter(public=True)
+    #     # # the selected records are re-ordered  by "created_date"         
+    #     # qs = qs.order_by("created_date")[:7]
+    #     return qs
+# -----------------------------------------------------------------
+# Main detail view, List view for sensor devices at each site 
+class MainDetailView(generic.ListView):
+    template_name='main/main_detail.html'
+    model=Result
+
+    def get(self, request, *args, **kwargs):
+        # pk情報を取得してquerysetを生成する    
+        # Get pk which indicates the location
+        id=Location.objects.get(pk=self.kwargs['pk'])
+        # pk情報を取得する, another way
+        # def get_form_kwargs(self):
+        #     kwgs=super().get_form_kwargs()
+        #     kwgs["pk"]=self.pk
+        #     return kwgs
+        location=Location.objects.get(pk=id.pk)
+        # Get queryset for Measured_data, result
+        data_list=Result.objects.filter(place_id=id.pk)
+        # Get queryset for sensor object
+        sensor_list=Sensors.objects.filter(place_id=id.pk)
+        
+        # sensor = [] 
+        # measuredata=[]
+        # measured=[]
+        # x_data=[]
+        # ydata=[[] for i in range(12)]
+        # latest=30   #the latest indicator
+
+        """
+        'if' and 'for' Statements both do not form scopes in Python. 
+        Therefore, the variable if inside the sentence is the same as the variable outside.
+        Variables, 'start_at' and 'd_tmp' lator appeared are effective both inside and outside.
+        """
+        # Set sonsor device'
+        # Generate a graph data
+        # for n in range(start_at, start_at + len(sensor_list)):
+        # 2023.2.28再考
+        # センサーデータの過去30個分のデータをydata[]としてリスト化する
+        #     s_tmp = sensor_list.get(id = n + 1)
+        #     sensor.append(s_tmp)       
+        #     note.append(s_tmp.note)
+        #     # d_tmp = data_list.filter(point_id = n + 1).order_by('created_at').reverse().first()
+        #     temp = data_list.filter(point_id = n + 1).order_by('created_at')
+        #     last=len(temp)
+        #     tmp=temp[last-latest:last+1]
+        #     for data in tmp:
+        #         ydata[n].append(data.data_value)
+        #         # y_data.append(data.data_value)
+
+        #     d_tmp = temp.reverse().first()
+        #     measuredata.append(d_tmp.data_value)
+        #     measured.append(d_tmp.measured_at.strftime('%H:%M'))    #d_tmp.measured_at.strftime('%H:%M:%S')
+        #     # for data in tmp:
+        #     #     y_data.append(data.data_value)
+
+        # date=d_tmp.measured_at.strftime('%Y年%m月%d日')
+
+        # # Prepare Xaxis data for 30 minutes data display
+        # m=latest
+        # while(m>=0):
+        #     x_data.append(-m)
+        #     m-=1
+
+        # if(id.pk==1):
+        #     ydata0=ydata[0]
+        #     ydata1=ydata[1]
+        #     ydata2=ydata[2]
+        #     ydata3=ydata[3]
+        # elif(id.pk==2):
+        #     ydata0=ydata[4]
+        #     ydata1=ydata[5]
+        #     ydata2=ydata[6]
+        #     ydata3=ydata[7]
+        # else:
+        #     ydata0=ydata[8]
+        #     ydata1=ydata[9]
+        #     ydata2=ydata[10]
+        #     ydata3=ydata[11]
+
+        context={
+            "pk":id.pk,
+            # Not only for Table updating but also Chart drawing
+            "location":location,
+            "data_list":data_list,
+            "sensor_list":sensor_list,
+
+            # "sensor_number":len(sensor_list),
+            # "date":date,
+            
+            # # Only for Table updating
+            # "data0":measuredata[0],
+            # "data1":measuredata[1],
+            # "data2":measuredata[2],
+            # "data3":measuredata[3],
+            # "data4":measuredata[4],
+            # "date0":measured[0],
+            # "date1":measured[1],
+            # "date2":measured[2],
+            # "date3":measured[3],
+            # "date4":measured[4],
+            
+            # only for chart drawing
+            # "x_data":x_data,
+            # "y_data":y_data,
+            # "y_data0":y_data[0:13],     # 0 to 12 : 13
+            # "y_data1":y_data[13:26],    # 13 to 25 : 13 
+            # "y_data2":y_data[26:39],    # 
+            # "y_data3":y_data[39:52],
+            # "ydata":ydata,
+            # "ydata0":ydata0,
+            # "ydata1":ydata1,
+            # "ydata2":ydata2,
+            # "ydata3":ydata3, 
+        }
+        return render(request, "main/main_detail.html", context)
 # -----------------------------------------------------------------
 # Locations' list view 
 class LocationListView(generic.ListView):
@@ -243,164 +395,6 @@ class SensorsDeleteView(generic.DeleteView):
     # form_class=LocationForm
     success_url = reverse_lazy('main:sensors_list')
 # -----------------------------------------------------------------
-# View of main list 
-class MainListView(generic.ListView):
-    template_name='main/main_list.html'
-    model=Sensors
-    
-    # ログインユーザーの情報を取得する
-    def get_form_kwargs(self):
-        kwgs=super().get_form_kwargs()
-        kwgs["user"]=self.user
-        return kwgs
-    # place情報を取得する
-    # querysetにA社(id=1)条件でフィルターをかけて上書き
-    def get_queryset(self):
-        if self.request.user.is_authenticated:
-            sensors_list=Sensors.objects.all()
-            if self.request.user.is_admin:
-                sensors_list=Sensors.objects.all()
-            else:
-                id=1
-                sensors_list=Sensors.objects.filter(place_id=id)
-        else:
-            sensors_list=None
-        return sensors_list
-
-    # def get_queryset(self):
-    #     # q = self.request.GET.get("search")
-    #     # qs = Record.objects.search(query=q)
-    #     # if self.request.user.is_authenticated:
-    #     #     qs = qs.filter(Q(public=True)|Q(user=self.request.user))
-    #     # else:
-    #     #     qs = qs.filter(public=True)
-    #     # # the selected records are re-ordered  by "created_date"         
-    #     # qs = qs.order_by("created_date")[:7]
-    #     return qs
-
-# -----------------------------------------------------------------
-# List view for sensor devices at each site
-# class SensorDeviceListView(generic.ListView):
-#     # template_name='sensor/sensor_device_list.html'
-#     # model=MeasureData
-#     # context_object_name = 'MeasureData_list'
-#     # return render(request, 'sensor/detail.html', {'location': name})
-#     def get(self, request, *args, **kwargs):
-#         # in this case, "pk" indicates place_id
-#         id=SensorDevice.objects.get(pk=self.kwargs['pk'])
-#         location=Location.objects.get(pk=id.pk)
-#         # set queryset to search "device" object in SensorDevice DB
-#         sensor_list=SensorDevice.objects.filter(site=id.pk)
-#         data_list=MeasureData.objects.filter(place=id.pk)
-#         sensor = [] 
-#         note = []
-#         measuredata=[]
-#         measured=[]
-#         x_data=[]
-#         ydata=[[] for i in range(12)]
-#         latest=30   #the latest indicator
-
-#         """
-#         'if' and 'for' Statements both do not form scopes in Python. 
-#         Therefore, the variable if inside the sentence is the same as the variable outside.
-#         Variables, 'start_at' and 'd_tmp' lator appeared are effective both inside and outside.
-#         """
-#         # to set sonsor device'
-#         if id.pk == 1:  start_at = 0
-#         elif id.pk == 2:    start_at = 4
-#         elif id.pk == 3:    start_at = 8
-#         # we generate a get_id from "point_id"
-#         for n in range(start_at, start_at + len(sensor_list)):
-#             s_tmp = sensor_list.get(id = n + 1)
-#             sensor.append(s_tmp)       
-#             note.append(s_tmp.note)
-#             # d_tmp = data_list.filter(point_id = n + 1).order_by('created_at').reverse().first()
-#             temp = data_list.filter(point_id = n + 1).order_by('created_at')
-#             last=len(temp)
-#             tmp=temp[last-latest:last+1]
-#             for data in tmp:
-#                 ydata[n].append(data.data_value)
-#                 # y_data.append(data.data_value)
-
-#             d_tmp = temp.reverse().first()
-#             measuredata.append(d_tmp.data_value)
-#             measured.append(d_tmp.measured_at.strftime('%H:%M'))    #d_tmp.measured_at.strftime('%H:%M:%S')
-#             # for data in tmp:
-#             #     y_data.append(data.data_value)
-
-#         if len(sensor_list) < 5:
-#             for n in range(5-len(sensor_list)):
-#                 sensor.append(" <- N/A -> ")
-#                 note.append("  ")
-#                 measuredata.append(" -- ")
-#                 measured.append("  ")
-#                 # Remark: 2022.12.16 What should I do make y_data list in case of no valid data
-
-#         date=d_tmp.measured_at.strftime('%Y年%m月%d日')
-
-#         # Prepare Xaxis data for 30 minutes data display
-#         m=latest
-#         while(m>=0):
-#             x_data.append(-m)
-#             m-=1
-
-#         if(id.pk==1):
-#             ydata0=ydata[0]
-#             ydata1=ydata[1]
-#             ydata2=ydata[2]
-#             ydata3=ydata[3]
-#         elif(id.pk==2):
-#             ydata0=ydata[4]
-#             ydata1=ydata[5]
-#             ydata2=ydata[6]
-#             ydata3=ydata[7]
-#         else:
-#             ydata0=ydata[8]
-#             ydata1=ydata[9]
-#             ydata2=ydata[10]
-#             ydata3=ydata[11]
-
-#         context={
-#             "pk":id.pk,
-#             # Not only for Table updating but also Chart drawing
-#             "location":location,
-#             "sensor_number":len(sensor_list),
-#             "date":date,
-#             "sensor0":sensor[0],
-#             "sensor1":sensor[1],
-#             "sensor2":sensor[2],
-#             "sensor3":sensor[3],
-#             "sensor4":sensor[4],
-#             "note0":note[0],
-#             "note1":note[1],
-#             "note2":note[2],
-#             "note3":note[3],
-#             "note4":note[4],
-#             # Only for Table updating
-#             "data0":measuredata[0],
-#             "data1":measuredata[1],
-#             "data2":measuredata[2],
-#             "data3":measuredata[3],
-#             "data4":measuredata[4],
-#             "date0":measured[0],
-#             "date1":measured[1],
-#             "date2":measured[2],
-#             "date3":measured[3],
-#             "date4":measured[4],
-#             # only for chart drawing
-#             "x_data":x_data,
-#             # "y_data":y_data,
-#             # "y_data0":y_data[0:13],     # 0 to 12 : 13
-#             # "y_data1":y_data[13:26],    # 13 to 25 : 13 
-#             # "y_data2":y_data[26:39],    # 
-#             # "y_data3":y_data[39:52],
-#             "ydata":ydata,
-#             "ydata0":ydata0,
-#             "ydata1":ydata1,
-#             "ydata2":ydata2,
-#             "ydata3":ydata3, 
-#         }
-#         return render(request, "sensor/sensor_device_list.html", context)
 
 # 2022/11/8 CSV file uplaoding
 # it does need as reverse url path, does not it need? at 2022/11/11  

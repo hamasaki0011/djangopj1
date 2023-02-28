@@ -1,0 +1,38 @@
+{% extends 'main/main_base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <br>
+    <h3>{{ location.name }} 様現場</h3>
+    <table class="table caption-top table-bordered border-dark">
+        <caption>各センサー測定情報</caption>
+        <thead class="table-primary table-bordered border-dark">
+            <tr>
+                <th scope="col">センサー名</th>
+                <th scope="col">測定値</th>
+                <th scope="col">測定日</th>
+                <th scope="col">備考(メモ)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in data_list %}
+            <tr>
+                <td colspan="1">{{ result.point }}</td>
+                <td colspan="1">{{ result.measured_value }}</td>
+                <td colspan="1">{{ result.measured_date }}</td>
+                <td colspan="1">{{ result.point.note }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+</div>
+<div class="container">
+    <div>
+        <big>
+            <p>各現場の測定ポイントがリストかできたので</p>
+            <p>これをもとにグラフを描画する</p>
+        </big>
+    </div>
+</div>
+{% endblock %}

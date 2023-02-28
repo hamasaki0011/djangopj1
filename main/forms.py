@@ -1,6 +1,5 @@
 from django import forms
-from .models import Location,Sensors
-# from .models import MeasureData
+from .models import Location,Sensors,Result
 # import os
 # import io, csv
 # from django.core.exceptions import ValidationError
@@ -68,12 +67,12 @@ class SensorsFormClass(forms.Form):
     memo = forms.CharField(widget=forms.Textarea())
 
 
-# class MeasureDataForm(forms.ModelForm):
-#     class Meta:
-#         model=MeasureData
-#         fields=(
-#             'point', 'measured_at', 'data_value',
-#         )
+class ResultForm(forms.ModelForm):
+    class Meta:
+        model=Result
+        fields=(
+            'place','point', 'measured_date', 'measured_value',
+        )
 
 # # 2022/11/8 generate a button for CSV file uploading
 # class FileUploadForm(forms.Form):  
