@@ -40,11 +40,11 @@ class Sensors(models.Model):
         各センサーを定義 """
     class Meta:
         db_table='sensors'
-        unique_together=(('place','device'),)
+        unique_together=(('site','device'),)
         verbose_name='センサー'
         verbose_name_plural='センサー一覧'
     
-    place=models.ForeignKey(Location, verbose_name='現場', on_delete=models.PROTECT)
+    site=models.ForeignKey(Location, verbose_name='現場', on_delete=models.PROTECT)
     device=models.CharField(verbose_name='センサー', max_length=127,default='',blank=True,null=True)
     note=models.CharField(verbose_name='補足', max_length=255,default='',blank=True,null=True)
     created_date=models.DateTimeField(verbose_name='登録日',default=timezone.now)
@@ -70,7 +70,7 @@ class Result(models.Model):
 
     def __str__(self):
         # return "("+ self.place.name + ")" + "センサー: " + self.point.device + " 日付・時間: " +  str(self.measured_at) + " 測定値: " + str(self.data_value)
-        return self.point.device + " 【測定日時】 " +  str(self.measured_date) + " 【測定値】 " + str(self.measured_value)  
+        return self.point.device + str(self.measured_value)  
 
     @admin.display(
         boolean=True,
@@ -80,4 +80,4 @@ class Result(models.Model):
 
     def was_measured_recently(self):
         now=timezone.now()
-        return now-datetime.timedelta(hours=1)<=self.measured_date<=now
+        return now-datetime.timedelta(days=1)<=self.measured_date<=now

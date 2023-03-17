@@ -7,11 +7,11 @@ from .forms import LocationForm,SensorsForm
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.contrib import messages
 from django.utils import timezone
+import datetime
 
 # from django.http import Http404
 # from django.shortcuts import get_object_or_404, render
 # from django.http import HttpResponseRedirect
-# from .models import MeasureData, SensorDevice
 # from .application import data_rw
 # for CSV file uploading
 # import csv, io, datetime
@@ -32,6 +32,7 @@ from django.utils import timezone
 # UPLOAD_DIR = os.path.join(os.path.dirname(__file__), '../static/upload/')
 # Define debug log-file
 # logger = logging.getLogger('development')
+
 class OwnerOnly(UserPassesTestMixin):
     def test_func(self):
         location_instance = self.get_object()
@@ -46,43 +47,8 @@ class IndexView(generic.ListView):
     template_name='main/main_index.html'
     model=Location
     # 2023.2.28　メモ
-    # ユーザー情報の取得と取得したキーでフィルターをかけた
+    # ユーザー情報を取得して、そのキーでフィルターをかける
     # クエリー取得を書く
-# -----------------------------------------------------------------
-# View of main list 
-class MainListView(generic.ListView):
-    template_name='main/main_list.html'
-    model=Sensors
-    
-    # ログインユーザーの情報を取得する
-    def get_form_kwargs(self):
-        kwgs=super().get_form_kwargs()
-        kwgs["user"]=self.user
-        return kwgs
-    # place情報を取得する
-    # querysetにA社(id=1)条件でフィルターをかけて上書き
-    def get_queryset(self):
-        if self.request.user.is_authenticated:
-            sensors_list=Sensors.objects.all()
-            if self.request.user.is_admin:
-                sensors_list=Sensors.objects.all()
-            else:
-                id=1
-                sensors_list=Sensors.objects.filter(place_id=id)
-        else:
-            sensors_list=None
-        return sensors_list
-
-    # def get_queryset(self):
-    #     # q = self.request.GET.get("search")
-    #     # qs = Record.objects.search(query=q)
-    #     # if self.request.user.is_authenticated:
-    #     #     qs = qs.filter(Q(public=True)|Q(user=self.request.user))
-    #     # else:
-    #     #     qs = qs.filter(public=True)
-    #     # # the selected records are re-ordered  by "created_date"         
-    #     # qs = qs.order_by("created_date")[:7]
-    #     return qs
 # -----------------------------------------------------------------
 # Main detail view, List view for sensor devices at each site 
 class MainDetailView(generic.ListView):
@@ -90,113 +56,76 @@ class MainDetailView(generic.ListView):
     model=Result
 
     def get(self, request, *args, **kwargs):
-        # pk情報を取得してquerysetを生成する    
-        # Get pk which indicates the location
+        # Get 'pk' which indicates the monitoring site information
         id=Location.objects.get(pk=self.kwargs['pk'])
-        # pk情報を取得する, another way
-        # def get_form_kwargs(self):
-        #     kwgs=super().get_form_kwargs()
-        #     kwgs["pk"]=self.pk
-        #     return kwgs
+        # Get the name of monitoring site
         location=Location.objects.get(pk=id.pk)
         # Get queryset for Measured_data, result
-        data_list=Result.objects.filter(place_id=id.pk)
-        # Get queryset for sensor object
-        sensor_list=Sensors.objects.filter(place_id=id.pk)
+        # 注意：最終的にはtimedeltaで1分前のデータを表示するように調整する
+        # Generate the table data including the device name and the most recent measured_data
+        recent_update=datetime.date(2023,3,1)
+        today = datetime.datetime.now()
+        results=Result.objects.all().filter(place_id=id.pk, measured_date__range=(recent_update, today))
         
-        # sensor = [] 
-        # measuredata=[]
-        # measured=[]
-        # x_data=[]
-        # ydata=[[] for i in range(12)]
-        # latest=30   #the latest indicator
+        # Prepare the data for chart drawing
+        latest=30   # 30 minutes
+        # if devive number is required it is defined by numDevice
+        numDevice=15
+        xdata=[]
+        n=latest
+        while(n>=0):
+            xdata.append(-n)
+            n-=1
+        # Create y_Axis_data
+        y_tmp=[[] for j in range(latest)]
+        """ this means followings; 
+            device0 : y_tmp[0][0] ~ y_tmp[0][29]
+            device1 : y_tmp[1][0] ~ y_tmp[1][29]
+            ...
+            device5 : y_tmp[5][0] ~ y_tmp[1][29]
+        """
+        # define ydata lists with initializing
+        ydata=[[] for j in range(latest)]        
+        data_list=Result.objects.all().filter(place_id=id.pk) 
+        # Get sensor device point's number
+        sensor_list=Sensors.objects.filter(site_id=id.pk)
+        # Get the number of sensor device point's 
+        pointNum=len(sensor_list)
+        # Get the smallest number of the point_id
+        startPoint=sensor_list.order_by('id').first().id
+        # Generate a graph data from sensor's measured_value
+        for i in range(pointNum):
+            # 課題：センサー番号がシリーズであることが前提のquery設定
+            y_tmp[startPoint-1+i]=data_list.filter(point_id=startPoint+i).order_by('measured_date')[:latest]
 
+            for data in y_tmp[startPoint-1+i]:
+                ydata[startPoint-1+i].append(data.measured_value)
+                
+        # date=results.first().measured_date.strftime('%Y年%m月%d日')
         """
         'if' and 'for' Statements both do not form scopes in Python. 
         Therefore, the variable if inside the sentence is the same as the variable outside.
         Variables, 'start_at' and 'd_tmp' lator appeared are effective both inside and outside.
         """
-        # Set sonsor device'
-        # Generate a graph data
-        # for n in range(start_at, start_at + len(sensor_list)):
-        # 2023.2.28再考
-        # センサーデータの過去30個分のデータをydata[]としてリスト化する
-        #     s_tmp = sensor_list.get(id = n + 1)
-        #     sensor.append(s_tmp)       
-        #     note.append(s_tmp.note)
-        #     # d_tmp = data_list.filter(point_id = n + 1).order_by('created_at').reverse().first()
-        #     temp = data_list.filter(point_id = n + 1).order_by('created_at')
-        #     last=len(temp)
-        #     tmp=temp[last-latest:last+1]
-        #     for data in tmp:
-        #         ydata[n].append(data.data_value)
-        #         # y_data.append(data.data_value)
-
-        #     d_tmp = temp.reverse().first()
-        #     measuredata.append(d_tmp.data_value)
-        #     measured.append(d_tmp.measured_at.strftime('%H:%M'))    #d_tmp.measured_at.strftime('%H:%M:%S')
-        #     # for data in tmp:
-        #     #     y_data.append(data.data_value)
-
-        # date=d_tmp.measured_at.strftime('%Y年%m月%d日')
-
-        # # Prepare Xaxis data for 30 minutes data display
-        # m=latest
-        # while(m>=0):
-        #     x_data.append(-m)
-        #     m-=1
-
-        # if(id.pk==1):
-        #     ydata0=ydata[0]
-        #     ydata1=ydata[1]
-        #     ydata2=ydata[2]
-        #     ydata3=ydata[3]
-        # elif(id.pk==2):
-        #     ydata0=ydata[4]
-        #     ydata1=ydata[5]
-        #     ydata2=ydata[6]
-        #     ydata3=ydata[7]
-        # else:
-        #     ydata0=ydata[8]
-        #     ydata1=ydata[9]
-        #     ydata2=ydata[10]
-        #     ydata3=ydata[11]
-
         context={
             "pk":id.pk,
-            # Not only for Table updating but also Chart drawing
+            "k":pointNum,
+            "l":startPoint,
+
+            # For the latest measured value table 
             "location":location,
-            "data_list":data_list,
+            "results":results,
             "sensor_list":sensor_list,
 
-            # "sensor_number":len(sensor_list),
-            # "date":date,
-            
-            # # Only for Table updating
-            # "data0":measuredata[0],
-            # "data1":measuredata[1],
-            # "data2":measuredata[2],
-            # "data3":measuredata[3],
-            # "data4":measuredata[4],
-            # "date0":measured[0],
-            # "date1":measured[1],
-            # "date2":measured[2],
-            # "date3":measured[3],
-            # "date4":measured[4],
-            
-            # only for chart drawing
-            # "x_data":x_data,
-            # "y_data":y_data,
-            # "y_data0":y_data[0:13],     # 0 to 12 : 13
-            # "y_data1":y_data[13:26],    # 13 to 25 : 13 
-            # "y_data2":y_data[26:39],    # 
-            # "y_data3":y_data[39:52],
-            # "ydata":ydata,
-            # "ydata0":ydata0,
-            # "ydata1":ydata1,
-            # "ydata2":ydata2,
-            # "ydata3":ydata3, 
+            # For chart drawing
+            "x_data":xdata,
+            "ydata0":ydata[startPoint-1],
+            "ydata1":ydata[startPoint],
+            "ydata2":ydata[startPoint+1],
+            "ydata3":ydata[startPoint+2],
+            "ydata":ydata, 
         }
+        
         return render(request, "main/main_detail.html", context)
 # -----------------------------------------------------------------
 # Locations' list view 
@@ -232,10 +161,10 @@ class LocationCreateModelFormView(LoginRequiredMixin,generic.CreateView):
     success_url = reverse_lazy("main:location_list")
     
     # user情報を取得する
-    # def get_form_kwargs(self):
-    #     kwgs=super().get_form_kwargs()
-    #     kwgs["user"]=self.request.user
-    #     return kwgs
+    def get_form_kwargs(self):
+        kwgs=super().get_form_kwargs()
+        kwgs["user"]=self.request.user
+        return kwgs
     
     # このviewではデータの取り込み、保存も一括して行われるので以下はいらない。  
     # # Received and saved data 
@@ -267,12 +196,17 @@ class LocationUpdateModelFormView(OwnerOnly,generic.UpdateView):
     template_name = "main/location_form.html"
     form_class = LocationForm
     success_url = reverse_lazy("main:location_list")
-    
     # Following get_querryset() is mondatly requrered.
     # in case of using a FormView
     def get_queryset(self):
         qs = Location.objects.all()
         return qs
+    # Update updated_date
+    def form_valid(self, form):
+        location = form.save(commit=False)
+        location.updated_date = timezone.now()
+        location.save()
+        return super().form_valid(form)
 
 # Another way
 # class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
@@ -303,10 +237,10 @@ class SensorsListView(generic.ListView):
     model=Sensors
 
     # user情報を取得する
-    # def get_form_kwargs(self):
-    #     kwgs=super().get_form_kwargs()
-    #     kwgs["user"]=self.request.user
-    #     return kwgs
+    def get_form_kwargs(self):
+        kwgs=super().get_form_kwargs()
+        kwgs["user"]=self.request.user
+        return kwgs
     
     # def get_queryset(self):
     #     qs = Sensors.objects.all()
@@ -372,6 +306,12 @@ class SensorsUpdateModelFormView(generic.UpdateView):
     # in order to get place data
     def get_queryset(self):
         return Sensors.objects.all()
+    # Update updated_date
+    def form_valid(self, form):
+        sensors = form.save(commit=False)
+        sensors.updated_date = timezone.now()
+        sensors.save()
+        return super().form_valid(form)
 # Another way
 # class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
 # class LocationUpdateView(generic.UpdateView):

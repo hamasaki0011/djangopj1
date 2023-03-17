@@ -1,12 +1,15 @@
 {% extends 'record/record_base.html' %}
 
 {% block content %}
+<div class="container">
+    <br>
     <h3>遠隔監視システム開発にあたって</h3>
-    <big>
-        <span>実験検証用に構築したサーバーは、Linux(Ubuntu)OSで構成しています。</span>
-        <br><span>なぜLinux ? ➡ 低コスト </span>
-        <br><span>オープンソースOSのため、無料で長期サポートのサーバーを構築できる</span>
-    </big>
+    <div><big>
+            <span>実験検証用に構築したサーバーは、Linux(Ubuntu)OSで構成しています。</span>
+            <br><span>なぜLinux ? ➡ 低コスト </span>
+            <br><span>オープンソースOSのため、無料で長期サポートのサーバーを構築できる</span>
+    </big></div>
+    <br>
     <div>
         <h3>■Linuxサーバー基本構成</h3>
         <p><a href="{% url 'record:record_server' %}">Webサーバー構築</a></p>
@@ -18,7 +21,9 @@
         <br><a href="https://www.ubuntulinux.jp/home" target="_blank" rel="noopener noreferrer">ubuntu Japanese Team</a>
         <br><a href="https://shell-mag.com/portal-linuxserver/" target="_blank" rel="noopener noreferrer">UbuntuではじめるLinuxサーバー</a>
         <br><a href="https://www.fenet.jp/infla/column/server/linux%E3%81%A7%E3%81%AE%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E6%A7%8B%E7%AF%89%E3%81%A8%E3%81%AF%EF%BC%9F%E3%81%8A%E3%81%99%E3%81%99%E3%82%81%E3%81%AE%E3%83%87%E3%82%A3%E3%82%B9%E3%83%88%E3%83%AA" target="_blank" rel="noopener noreferrer">Linuxでのサーバー構築とは？おすすめのディストリビューション11選</a>
-            
+    </div>
+    <br>
+    <div>        
         <h3>■Webアプリ作成環境構築</h3>
         <big>
             <span>このWebアプリは、Pythonを開発言語としてDjangoフレームワークで構成しています</span>
@@ -31,7 +36,9 @@
         <span>=参考記事=</span>
         <br><a href="https://www.itmanage.co.jp/column/web-application/" target="_blank" rel="noopener noreferrer">WEBアプリケーションとは？ 仕組みを開発やフレームワークを例に解説</a>
         <br><a href="https://yunifusu.com/programming/webapp_make_01/" target="_blank" rel="noopener noreferrer">【Python×Django×Docker×VScode】WEBアプリ作成フロー</a>
-            
+    </div>
+    <br>
+    <div>
         <h3>■Webアプリ開発準備</h3>
         <p>- Pyhton学習</p>
         <a href="{% url 'record:record_python' %}">Pythonの設定</a>
@@ -60,7 +67,5 @@
         <br><a href="https://ssrv.net/tech/python-file-watchdog/">【Python】フォルダ内の変更を監視する Watchdog の使用例</a>  
     </div>
     <br>
-    <div>
-        <a href="/">Topページに戻る</a>
-    </div> 
+</div>
 {% endblock %}

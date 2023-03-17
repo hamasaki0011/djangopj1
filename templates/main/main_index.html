@@ -5,7 +5,8 @@
 {% block content %}
 <div class="container">
     {% if request.user.is_authenticated %}
-    <br>    
+
+    <br>
     <div>
         <h4>■遠隔監視サイトを表示</h4>
         <h6>遠隔監視サイトを選択してください。</h6>
@@ -27,20 +28,21 @@
             <h6>
                 <a class="form-control btn btn-warning" href="{% url 'main:sensors_list' %}"><span class="glyphicon glyphicon-list"></span> センサーの全体一覧を表示</a>
             </h6>
-            <p>上と下どちらを残すか？後で決める</p>
-            <h6>
-                <a class="form-control btn btn-light" href="{% url 'main:main_list' %}"><span class="glyphicon glyphicon-list"></span> センサー一覧を表示</a>
-            </h6>               
         </div>
         <br>
         <div>
-            <h4>■システム開発の記録を閲覧</h4>
+            <h4>■システム開発の記録</h4>
             <h5>
                 <a  class="form-control btn btn-secondary" href="{% url 'record:record_article' %}"><span class="glyphicon glyphicon-book"></span> 関連する参考記事を閲覧</a>
             </h5>
         </div>
         <br>
+    </div>
+
     {% else %}
+    
+    <br>
+    <div>
         <div class ='form-control'>
             <h4>「ログイン」または「ユーザー登録」が必要です！</h4>
         </div>
@@ -55,6 +57,7 @@
                 <a class="form-control btn btn-primary" href="{% url 'account_signup' %}"><span class="glyphicon glyphicon-list"></span>ユーザー登録画面へ</a>        
             </h2>
         </div>
+    </div>
 
     {% endif %}        
 </div>

@@ -6,8 +6,6 @@ app_name='main'
 urlpatterns=[
     # Top index view
     path('', views.IndexView.as_view(), name='main_index'),
-    # Main List view
-    path('list/', views.MainListView.as_view(), name='main_list'),
     # Main detail view
     path('detail/<int:pk>/', views.MainDetailView.as_view(), name='main_detail'),
     # Location list view

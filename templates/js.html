@@ -1,7 +1,7 @@
 <!-- Real-time clock script, it does work in the system @2023.2.21 -->
 <script>
     function twoDigit(num) {
-        let ret;
+        var ret;
         if (num < 10)
             ret = "0" + num;
         else
@@ -10,17 +10,17 @@
     }
 
     function showClock() {
-        let now = new Date();
-        let year = now.getFullYear();
-        let month = now.getMonth() + 1;
-        let date = now.getDate();
-        let week = now.getDay();
-        let wd = ['日', '月', '火', '水', '木', '金', '土'];
-        let nowHour = twoDigit(now.getHours());
-        let nowMin = twoDigit(now.getMinutes());
-        let nowSec = twoDigit(now.getSeconds());
-        let msgDate = year + '年' + month + '月' + date+ '日'+ '(' + wd[week] + ')';
-        let msgTime = "" + nowHour + ":" + nowMin + ":" + nowSec;
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = now.getMonth() + 1;
+        var date = now.getDate();
+        var week = now.getDay();
+        var wd = ['日', '月', '火', '水', '木', '金', '土'];
+        var nowHour = twoDigit(now.getHours());
+        var nowMin = twoDigit(now.getMinutes());
+        var nowSec = twoDigit(now.getSeconds());
+        var msgDate = year + '年' + month + '月' + date+ '日'+ '(' + wd[week] + ')';
+        var msgTime = "" + nowHour + ":" + nowMin + ":" + nowSec;
         //document.getElementById("date").innerHTML = year + '年' + month + '月' + date+ '日';
         //target0 = document.getElementById("today");
         //target0.innerHTML = '今日は　' + msgDate;
@@ -31,9 +31,6 @@
     }
     setInterval('showClock()', 1000);
 </script>
-
-<!-- Plotly用のscriptを準備 -->
-<script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <!-- it seems the latest version of bootstrap starter does work in the system @2023.2.21 -->
 <!-- Bootstrap Bundle with Popper -->
