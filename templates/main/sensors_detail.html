@@ -4,7 +4,8 @@
 
 <div class="container">
     <table class="table caption-top table-bordered border-dark">
-        <h3>{{ sensors.place }} 様現場</h3>
+        <br>
+        <h3>{{ sensors.site }} 様 {{ sensors.device }} 情報</h3>
         <caption>{{ sensors.device }} 情報</caption>
         <thead class="table-primary table-bordered border-dark">
             <tr>
@@ -17,7 +18,7 @@
         </thead>
         <tbody>
             <tr>
-                <td colspan="1">{{ sensors.place.name }}</td>
+                <td colspan="1">{{ sensors.site.name }}</td>
                 <td colspan="1">{{ sensors.device}}</td>
                 <td colspan="1">{{ sensors.note }}</td>
                 <td colspan="1">{{ sensors.updated_date }}</td>

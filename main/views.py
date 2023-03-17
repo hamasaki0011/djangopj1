@@ -17,10 +17,8 @@ import datetime
 # import csv, io, datetime
 # from django.http import HttpResponse 
 # from sensor.forms import FileUploadForm
-# import os
 # import numpy as np
 # from sensor import addCsv, writeCsv
-# import logging
 # embeded watchdog module
 # import sys
 # import time
@@ -28,10 +26,16 @@ import datetime
 # from watchdog.events import RegexMatchingEventHandler
 # from watchdog.events import LoggingEventHandler
 
+import os
+import logging
+from main import addCsv
+from .forms import FileUploadForm
+# from .forms import UploadFileForm
+
 # directory to store the uploading files
-# UPLOAD_DIR = os.path.join(os.path.dirname(__file__), '../static/upload/')
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'static/uploads/')
 # Define debug log-file
-# logger = logging.getLogger('development')
+logger = logging.getLogger('development')
 
 class OwnerOnly(UserPassesTestMixin):
     def test_func(self):
@@ -173,23 +177,23 @@ class LocationCreateModelFormView(LoginRequiredMixin,generic.CreateView):
     #     obj=Location(**data)        # 入力したデータでオブジェクトを作成し保存する
     #     obj.save()
     #     return super().form_valid(form)
-
-# Another way to create
-# class LocationCreateView(LoginRequiredMixin,generic.CreateView):
-#     template_name='main/location_create.html'
-#     # model=Location
-#     form_class=LocationForm
-#     success_url=reverse_lazy('main:location_list')
+"""
+Another way to create
+class LocationCreateView(LoginRequiredMixin,generic.CreateView):
+    template_name='main/location_create.html'
+    # model=Location
+    form_class=LocationForm
+    success_url=reverse_lazy('main:location_list')
     
-#     # Received and saved data 
-#     def form_valid(self, form):
-#         location = form.save(commit=False)
-#         # location.author = self.request.user
-#         location.crteated_date = timezone.now()
-#         location.updated_date = timezone.now()
-#         location.save()
-#         return super().form_valid(form)
-
+    # Received and saved data 
+    def form_valid(self, form):
+        location = form.save(commit=False)
+        # location.author = self.request.user
+        location.crteated_date = timezone.now()
+        location.updated_date = timezone.now()
+        location.save()
+        return super().form_valid(form)
+"""
 # -----------------------------------------------------------------
 # Update location's information
 class LocationUpdateModelFormView(OwnerOnly,generic.UpdateView):
@@ -207,22 +211,23 @@ class LocationUpdateModelFormView(OwnerOnly,generic.UpdateView):
         location.updated_date = timezone.now()
         location.save()
         return super().form_valid(form)
-
-# Another way
-# class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
-# class LocationUpdateView(generic.UpdateView):
-#     template_name = 'main/location_update.html'
-#     model = Location
-#     # form_class = LocationForm
-#     fields = ('name', 'memo',)
-#     success_url = reverse_lazy('main:location_list')
+"""
+Another way
+class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
+class LocationUpdateView(generic.UpdateView):
+    template_name = 'main/location_update.html'
+    model = Location
+    # form_class = LocationForm
+    fields = ('name', 'memo',)
+    success_url = reverse_lazy('main:location_list')
  
-#     def form_valid(self, form):
-#         location = form.save(commit=False)
-#         # location.author = self.request.user
-#         location.updated_date = timezone.now()
-#         location.save()
-#         return super().form_valid(form)
+    def form_valid(self, form):
+        location = form.save(commit=False)
+        # location.author = self.request.user
+        location.updated_date = timezone.now()
+        location.save()
+        return super().form_valid(form)
+"""
 # -----------------------------------------------------------------
 # Delete location information
 class LocationDeleteView(OwnerOnly,generic.DeleteView):
@@ -259,6 +264,25 @@ class SensorsListView(generic.ListView):
 class SensorsDetailView(generic.DetailView):
     template_name='main/sensors_detail.html'
     model=Sensors
+# class SensorDeviceDetailView(generic.DetailView):
+#     def get(self,request, *args,**kwargs):
+#         id=SensorDevice.objects.get(pk=self.kwargs['pk'])
+#         site=SensorDevice.objects.get(id=id.pk)
+#         data=MeasureData.objects.filter(point_id=id.pk)
+#         # # as following if you use "filter", you can get all contents of DB
+#         # memo=SensorDevice.objects.get(pk=sensor_device_id) 
+#         context={
+#             "id":id,
+#             "site":site,
+#             "data":data
+#         }
+#         return render(request, 'sensor/detail.html', context)
+#     #  model=SensorDevice
+#     #  template_name= 'sensor/detail.html'    
+
+# # class SensorDeviceDetailView(generic.DetailView):
+# #     template_name='sensor/sensor_device_detail.html'
+# #     model=SensorDevice
 # -----------------------------------------------------------------
 # Create a new Sensor place information view
 class SensorsCreateModelFormView(generic.CreateView):
@@ -279,22 +303,23 @@ class SensorsCreateModelFormView(generic.CreateView):
     #     obj=Location(**data)        # 入力したデータでオブジェクトを作成し保存する
     #     obj.save()
     #     return super().form_valid(form)
-# Another way to create
-# # class SensorsCreateView(LoginRequiredMixin,generic.CreateView):
-# class SensorsCreateView(generic.CreateView):
-#     template_name='main/sensors_create.html'
-#     model=Sensors
-#     # form_class=LocationForm
-#     success_url=reverse_lazy('main:sensors_list')
+"""Another way to create
+# class SensorsCreateView(LoginRequiredMixin,generic.CreateView):
+class SensorsCreateView(generic.CreateView):
+    template_name='main/sensors_create.html'
+    model=Sensors
+    # form_class=LocationForm
+    success_url=reverse_lazy('main:sensors_list')
     
-#     # Received and saved data 
-#     def form_valid(self, form):
-#         sensors = form.save(commit=False)
-#         # sensors.author = self.request.user
-#         sensors.crteated_date = timezone.now()
-#         sensors.updated_date = timezone.now()
-#         sensors.save()
-#         return super().form_valid(form)
+    # Received and saved data 
+    def form_valid(self, form):
+        sensors = form.save(commit=False)
+        # sensors.author = self.request.user
+        sensors.crteated_date = timezone.now()
+        sensors.updated_date = timezone.now()
+        sensors.save()
+        return super().form_valid(form)
+"""
 # -----------------------------------------------------------------
 # Update location's information
 class SensorsUpdateModelFormView(generic.UpdateView):
@@ -312,21 +337,23 @@ class SensorsUpdateModelFormView(generic.UpdateView):
         sensors.updated_date = timezone.now()
         sensors.save()
         return super().form_valid(form)
-# Another way
-# class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
-# class LocationUpdateView(generic.UpdateView):
-#     template_name = 'main/location_update.html'
-#     model = Location
-#     # form_class = LocationForm
-#     fields = ('name', 'memo',)
-#     success_url = reverse_lazy('main:location_list')
+"""
+Another way
+class LocationUpdateView(LoginRequiredMixin,generic.UpdateView):
+class LocationUpdateView(generic.UpdateView):
+    template_name = 'main/location_update.html'
+    model = Location
+    # form_class = LocationForm
+    fields = ('name', 'memo',)
+    success_url = reverse_lazy('main:location_list')
  
-#     def form_valid(self, form):
-#         location = form.save(commit=False)
-#         # location.author = self.request.user
-#         location.updated_date = timezone.now()
-#         location.save()
-#         return super().form_valid(form)
+    def form_valid(self, form):
+        location = form.save(commit=False)
+        # location.author = self.request.user
+        location.updated_date = timezone.now()
+        location.save()
+        return super().form_valid(form)
+"""
 # -----------------------------------------------------------------
 # Delete Sensor information
 class SensorsDeleteView(generic.DeleteView):
@@ -335,35 +362,10 @@ class SensorsDeleteView(generic.DeleteView):
     # form_class=LocationForm
     success_url = reverse_lazy('main:sensors_list')
 # -----------------------------------------------------------------
-
 # 2022/11/8 CSV file uplaoding
 # it does need as reverse url path, does not it need? at 2022/11/11  
 # def index(req):
 #     return render(req, 'main/index.html')
-
-# class SensorDeviceDetailView(generic.DetailView):
-#     def get(self,request, *args,**kwargs):
-#         id=SensorDevice.objects.get(pk=self.kwargs['pk'])
-#         site=SensorDevice.objects.get(id=id.pk)
-#         data=MeasureData.objects.filter(point_id=id.pk)
-#         # # as following if you use "filter", you can get all contents of DB
-#         # memo=SensorDevice.objects.get(pk=sensor_device_id) 
-#         context={
-#             "id":id,
-#             "site":site,
-#             "data":data
-#         }
-#         return render(request, 'sensor/detail.html', context)
-#     #  model=SensorDevice
-#     #  template_name= 'sensor/detail.html'    
-
-# class SensorListView(generic.ListView):
-#     template_name='sensor/sensor_list.html'
-#     model=SensorDevice
-
-# # class SensorDeviceDetailView(generic.DetailView):
-# #     template_name='sensor/sensor_device_detail.html'
-# #     model=SensorDevice
 
 # class DetailView(generic.DetailView):
 #     def get(self,request, *args,**kwargs):
@@ -395,51 +397,70 @@ class SensorsDeleteView(generic.DeleteView):
 #     # except SensorDevice.DoesNotExist:
 #     #     raise Http404("SensorDevice does not exist")
 #     # return render(request, 'sensor/detail.html', {'device': device })
-
-# def results(request, location_id):
-#     response = "You're looking at the results of question %s."
-#     return HttpResponse(response % location_id)
-
-# def vote(request, location_id):
-#     return HttpResponse("You're voting on question %s." % location_id)
-
+# -----------------------------------------------------------------
 # hundling the uploading file
-# def handle_uploaded_file(f):
-#     path = os.path.join(UPLOAD_DIR, f.name)
-#     with open(path, 'wb+') as destination:
-#         for chunk in f.chunks():
-#             destination.write(chunk)
-#     try:
-#         # addCsv.insert_csv_data(path)    # register the csv file' data to DB
-#         writeCsv.insert_csv_data(path)    # register the csv file' data to DB
-#     except Exception as exc:
-#         logger.error(exc)
-#     os.remove(path) # delete the apploaded file
-
-# file uploading trial_2 in case of using a class view at 2022/11/11
-# class Upload(generic.FormView):
-#     template_name = 'upload.html'
-#     form_class = FileUploadForm
+def handle_uploaded_file(f):
+    path = os.path.join(UPLOAD_DIR, f.name)
+    with open(path, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+    try:
+        addCsv.insert_csv_data(path)        # register the contents of csv file' to DB
+        # writeCsv.insert_csv_data(path)    # register the csv file' data to DB
+    except Exception as exc:
+        logger.error(exc)
+    # Delete the apploading completed file
+    os.remove(path)                         
+# -----------------------------------------------------------------
+# CSV file uploading
+class Upload(generic.FormView):
+    template_name = 'main/upload.html'
+    form_class = FileUploadForm
     
-#     def get_form_kwargs(self):
-#         # set prefix of correct csv file's name into valiables
-#         valiables='test'    # valiable to pass to form
-#         kwargs=super(Upload,self).get_form_kwargs()
-#         kwargs.update({'valiables':valiables})
-#         return kwargs
+    def get_form_kwargs(self):
+        # set prefix of correct csv file's name into valiables
+        valiables='test'    # valiable to pass to form
+        kwargs=super(Upload,self).get_form_kwargs()
+        kwargs.update({'valiables':valiables})
+        return kwargs
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         form = self.get_form()
-#         context = {
-#             'form': form,
-#         }
-#         return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = self.get_form()
+        context = {
+            'form': form,
+        }
+        return context
 
-#     def form_valid(self, form):
-#         handle_uploaded_file(self.request.FILES['file'])
-#         return redirect('sensor:upload_complete')  # to redirect to upload complete view
-
+    def form_valid(self, form):
+        handle_uploaded_file(self.request.FILES['file'])
+        return redirect('main:upload_complete')  # to redirect to upload complete view
+"""
+Another way
+def upload(request):
+    if request.method == 'POST':
+        # form = UploadFileForm(request.POST, request.FILES)
+        form = FileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            return redirect('main:upload_complete')  # アップロード完了画面にリダイレクト
+    else:
+        # form = UploadFileForm()
+        form = FileUploadForm()
+    return render(request, 'main/upload.html', {'form': form})
+"""
+# -----------------------------------------------------------------
+# Complete the file uploading
+class UploadComplete(generic.FormView):
+    template_name = 'main/upload_complete.html'
+    form_class = FileUploadForm
+"""
+Another way
+def upload_complete(request):
+    return render(request, 'main/upload_complete.html')
+    return render(request, 'main/upload.html')
+"""
+# -----------------------------------------------------------------
 # class Load(generic.FormView):
 #     template_name = 'load.html'
 #     form_class = FileUploadForm
@@ -466,11 +487,6 @@ class SensorsDeleteView(generic.DeleteView):
 #         # 2022.12.21 why can not return to index page from here
 #         # return redirect('index(req)')
 
-# Complete view file uploading trial_2 at 2022/11/11
-# class UploadComplete(generic.FormView):
-#     template_name = 'upload_complete.html'
-#     form_class = FileUploadForm
-
 # 2022/12/21 Download csv file 
 # def download(request):
 #     # To produce csv file to download
@@ -486,9 +502,6 @@ class SensorsDeleteView(generic.DeleteView):
 #     writer.writerow(['O','as 5th letter'])
 #     return response
 
-# class SensorSettingDoneView(generic.TemplateView):
-#     template_name='sensor_setting_done.html'
-
 # def call_write_data(req):
 #     if req.method == 'GET':
 #         # write_data.pyのwrite_csv()メソッドを呼び出す。
@@ -502,5 +515,3 @@ class SensorsDeleteView(generic.DeleteView):
 #         return HttpResponse(data)
 #         # writeの場合のリターン
 #         #return HttpResponse()
-
-

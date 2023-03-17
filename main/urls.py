@@ -34,6 +34,16 @@ urlpatterns=[
     
     path("profile/", include("accounts.urls")),
     
+    # for file uploading at 2022/11/9
+    path('upload/', views.Upload.as_view(), name='upload'),
+    # path('upload/', views.upload, name='upload'),
+    path('upload/complete/', views.UploadComplete.as_view(), name='upload_complete'),
+    # path('upload/complete/', views.upload_complete, name='upload_complete'),
+    # path('load/', views.Load.as_view(), name='load'),
+
+
+    # path('download/', views.download, name='download'),
+    
     # # Display path root for all sensor devices belong in each site/location
     # path('sensor/device/list/<int:pk>/', views.SensorDeviceListView.as_view(), name='sensor_device_list'),
     # # 2022/12/14 Draw chart by using another chart tool
@@ -70,12 +80,4 @@ urlpatterns=[
     
     # # 以下を追記(views.pyのcall_write_data()にデータを送信できるようにする)
     # path("ajax/", views.call_write_data, name="call_write_data"),
-    # # for file uploading at 2022/11/9
-    # # path('upload/', views.upload, name='upload'),
-    # # path('upload/complete/', views.upload_complete, name='upload_complete'),
-    # path('upload/', views.Upload.as_view(), name='upload'),
-    # path('load/', views.Load.as_view(), name='load'),
-    # path('upload/complete/', views.UploadComplete.as_view(), name='upload_complete'),
-
-    # path('download/', views.download, name='download'),
 ]
