@@ -8,17 +8,20 @@ from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.contrib import messages
 from django.utils import timezone
 import datetime
+# import dateutil
+# from dateutil import tz
+# from dateutil.relativedelta import relativedelta
 
 # from django.http import Http404
 # from django.shortcuts import get_object_or_404, render
 # from django.http import HttpResponseRedirect
 # from .application import data_rw
 # for CSV file uploading
-# import csv, io, datetime
+# import csv, io
 # from django.http import HttpResponse 
 # from sensor.forms import FileUploadForm
 # import numpy as np
-# from sensor import addCsv, writeCsv
+# from sensor import writeCsv
 # embeded watchdog module
 # import sys
 # import time
@@ -31,11 +34,17 @@ import logging
 from main import addCsv
 from .forms import FileUploadForm
 # from .forms import UploadFileForm
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 # directory to store the uploading files
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'static/uploads/')
 # Define debug log-file
 logger = logging.getLogger('development')
+COLOR=['darkturquoise','orange','green','red','blue','brown','violet','magenta','gray','black']  # ten colors
+
+# JST=tz.gettz('Asia/Tokyo')
+# UTC=tz.gettz("UTC")
 
 class OwnerOnly(UserPassesTestMixin):
     def test_func(self):
@@ -54,6 +63,220 @@ class IndexView(generic.ListView):
     # ユーザー情報を取得して、そのキーでフィルターをかける
     # クエリー取得を書く
 # -----------------------------------------------------------------
+# Chart drawing function
+def line_charts(x_data,y_data,start,points,legend):
+    # fig=go.Figure()    
+    fig = make_subplots(
+        # rows=2, cols=1,
+        rows=1, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.2,
+        specs=[[{"secondary_y": True}]]
+        # specs=[[{"type": "scatter"}]]
+        # specs=[[{"type": "scatter"}], [{"type": "scatter"}]]
+    )
+    
+    fig.update_layout(
+        title='直近30分(*30)間のデータ推移',
+        grid=dict(
+            rows=1,
+            columns=1,
+            pattern='independent',
+            roworder='top to bottom',
+        ),
+         
+        xaxis=dict(
+            title='時間経過[minutes]',
+            showline=True,
+            showgrid=True,
+            zeroline=True,
+            showticklabels=True,
+            linecolor='rgb(204,204,204)',
+            linewidth=2,
+            ticks='outside',
+            tickcolor='rgb(204,204,204)',
+            tickwidth=2,
+            ticklen=5,
+            tickfont=dict(
+                family='Arial',
+                size=12,
+                color='rgb(82,82,82)',
+            )  
+        ),
+        
+        yaxis=dict(
+            title='温度[℃]',
+            showline=True,
+            showgrid=True,
+            zeroline=False,
+            showticklabels=True,
+            linecolor='rgb(204,204,204)',
+            linewidth=2,
+            autoshift=True,
+            ticks='outside',
+            tickcolor='rgb(204,204,204)',
+            tickwidth=2,
+            ticklen=5,
+            tickfont=dict(
+                family='Arial',
+                size=12,
+                color='rgb(82,82,82)',
+            )  
+        ),
+        
+        # xaxis2=dict(
+        #     title='時間経過[minutes]',
+        #     showline=True,
+        #     showgrid=True,
+        #     zeroline=True,
+        #     showticklabels=True,
+        #     linecolor='rgb(204,204,204)',
+        #     linewidth=2,
+        #     ticks='outside',
+        #     tickcolor='rgb(204,204,204)',
+        #     tickwidth=2,
+        #     ticklen=5,
+        #     tickfont=dict(
+        #         family='Arial',
+        #         size=12,
+        #         color='rgb(82,82,82)',
+        #     )  
+        # ),
+        
+        yaxis2=dict(
+            title='圧力[Pa]',
+            showline=True,
+            showgrid=True,
+            zeroline=False,
+            showticklabels=True,
+            linecolor='rgb(204,204,204)',
+            linewidth=2,
+            autoshift=True,
+            ticks='outside',
+            tickcolor='rgb(204,204,204)',
+            tickwidth=2,
+            ticklen=5,
+            tickfont=dict(
+                family='Arial',
+                size=12,
+                color='rgb(82,82,82)',
+            )  
+        ),        
+        
+        hovermode='closest',
+        autosize=True,
+        showlegend=True,
+        legend=dict(x=0.02,y=1.09,xanchor='left',yanchor='top',orientation='h',)
+    )
+    """_summary_ グラフ描画
+    左軸：温度[℃]、マーカー● と 右軸：温度以外(以下のところ圧力[Pa]を準備)、マーカー■の2軸描画
+    色分けが9色のみ、場合分けで20個まで描画可能
+    Returns:
+        _type_: _description_
+    """
+        
+    for i in range(0,points):
+        if(i<=9):
+            # 温度 [℃]軸
+            if('[℃]' in str(legend[i])):
+                fig.add_trace(
+                    go.Scatter(
+                        x=x_data,
+                        y=y_data[start-1+i],   
+                        name=str(legend[i]),        # legend table
+                        mode='lines+markers',
+                        connectgaps=True,
+                        line=dict(
+                            color=COLOR[i],         # color palette
+                            width=2,
+                        ),
+                        line_dash='solid',          # 
+                        marker=dict(
+                            symbol='circle',
+                            color=COLOR[i],         # color palette
+                            size=10,
+                        ),   
+                    )
+                )
+            # 圧力軸
+            else:
+                fig.add_trace(
+                    go.Scatter(
+                        x=x_data,
+                        y=y_data[start-1+i],
+                        # name='trace'+str(i+1),      
+                        name='右軸: '+str(legend[i]),        # legend table
+                        mode='lines+markers',
+                        connectgaps=True,
+                        line=dict(
+                            color=COLOR[i],         # color pallete
+                            width=2,
+                        ),
+                        line_dash='solid',
+                        marker=dict(
+                            symbol='square',
+                            color=COLOR[i],         # color pallet
+                            size=10,
+                        ),   
+                    ),
+                    secondary_y=True,
+                )                    
+        elif(i<=19):
+            # 温度軸
+            if('[℃]' in str(legend[i])):
+                fig.add_trace(
+                    go.Scatter(
+                        x=x_data,
+                        y=y_data[start-1+i],
+                        name=str(legend[i]),        # legend table
+                        mode='lines+markers',
+                        connectgaps=True,
+                        line=dict(
+                            color=COLOR[i-10],      # color palette
+                            width=2,
+                        ),
+                        line_dash="dot",
+                        marker=dict(
+                            symbol='circle',
+                            color=COLOR[i-10],      # color palette
+                            size=10,
+                        ),
+                    )
+                )
+            # 圧力軸
+            else:
+                fig.add_trace(
+                    go.Scatter(
+                        x=x_data,
+                        y=y_data[start-1+i],
+                        # name='trace'+str(i+1),      
+                        name='右軸: '+str(legend[i]),        # legend table
+                        mode='lines+markers',
+                        connectgaps=True,
+                        line=dict(
+                            color=COLOR[i-10],      # color palette
+                            width=2,
+                        ),
+                        line_dash="dot",
+                        marker=dict(
+                            symbol='square',
+                            color=COLOR[i-10],      # color palette
+                            size=10,
+                        ),
+                    ),
+                    secondary_y=True,
+                )   
+    # return fig.to_html(include_plotlyjs=False)
+    return fig.to_html(include_plotlyjs='cdn',full_html=False).encode().decode('unicode-escape')
+
+# class LineChartsView(generic.TemplateView):
+#     template_name="main/main_plot.html"
+    
+#     def get_context_data(self,**kwargs):
+#         context=super(LineChartsView,self).get_context_data(**kwargs)
+        
+#         return context
+# -----------------------------------------------------------------
 # Main detail view, List view for sensor devices at each site 
 class MainDetailView(generic.ListView):
     template_name='main/main_detail.html'
@@ -65,16 +288,26 @@ class MainDetailView(generic.ListView):
         # Get the name of monitoring site
         location=Location.objects.get(pk=id.pk)
         # Get queryset for Measured_data, result
-        # 注意：最終的にはtimedeltaで1分前のデータを表示するように調整する
+        
         # Generate the table data including the device name and the most recent measured_data
-        recent_update=datetime.date(2023,3,1)
+        # recent_update=datetime.date(2023,2,27)
+        # TD=9    # time deffernce
+        # today = datetime.datetime.now() + datetime.timedelta(hours=TD)
+        # 注意：最終的にはtimedeltaで1分前のデータを表示するように調整する
         today = datetime.datetime.now()
-        results=Result.objects.all().filter(place_id=id.pk, measured_date__range=(recent_update, today))
+        start_date=today-datetime.timedelta(hours=12)
+        results=Result.objects.all().filter(place_id=id.pk, created_date__range=(start_date,today))
+        # results=Result.objects.all().filter(place_id=id.pk)
+        # First of drawing the chart, prepare the legend's list as legend
+        legend=[]
+        for result in results:
+            legend.append(result.point)  
         
         # Prepare the data for chart drawing
         latest=30   # 30 minutes
         # if devive number is required it is defined by numDevice
         numDevice=15
+        # Prepare the array to memory the x_axis data as xdata[]
         xdata=[]
         n=latest
         while(n>=0):
@@ -88,7 +321,7 @@ class MainDetailView(generic.ListView):
             ...
             device5 : y_tmp[5][0] ~ y_tmp[1][29]
         """
-        # define ydata lists with initializing
+        # Prepare the array to memory the y_axis data as ydata[][]
         ydata=[[] for j in range(latest)]        
         data_list=Result.objects.all().filter(place_id=id.pk) 
         # Get sensor device point's number
@@ -104,17 +337,17 @@ class MainDetailView(generic.ListView):
 
             for data in y_tmp[startPoint-1+i]:
                 ydata[startPoint-1+i].append(data.measured_value)
-                
-        # date=results.first().measured_date.strftime('%Y年%m月%d日')
+
         """
         'if' and 'for' Statements both do not form scopes in Python. 
         Therefore, the variable if inside the sentence is the same as the variable outside.
         Variables, 'start_at' and 'd_tmp' lator appeared are effective both inside and outside.
         """
         context={
-            "pk":id.pk,
-            "k":pointNum,
-            "l":startPoint,
+            # "pk":id.pk,
+            # "k":pointNum,
+            # "l":startPoint,
+            # "legend":legend,
 
             # For the latest measured value table 
             "location":location,
@@ -122,14 +355,14 @@ class MainDetailView(generic.ListView):
             "sensor_list":sensor_list,
 
             # For chart drawing
-            "x_data":xdata,
-            "ydata0":ydata[startPoint-1],
-            "ydata1":ydata[startPoint],
-            "ydata2":ydata[startPoint+1],
-            "ydata3":ydata[startPoint+2],
-            "ydata":ydata, 
+            # "x_data":xdata,
+            # "ydata0":ydata[startPoint-1],
+            # "ydata1":ydata[startPoint],
+            # "ydata2":ydata[startPoint+1],
+            # "ydata3":ydata[startPoint+2],
+            # "ydata":ydata,
+            "plot":line_charts(xdata,ydata,startPoint,pointNum,legend), 
         }
-        
         return render(request, "main/main_detail.html", context)
 # -----------------------------------------------------------------
 # Locations' list view 

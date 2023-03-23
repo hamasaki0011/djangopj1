@@ -40,8 +40,6 @@ urlpatterns=[
     path('upload/complete/', views.UploadComplete.as_view(), name='upload_complete'),
     # path('upload/complete/', views.upload_complete, name='upload_complete'),
     # path('load/', views.Load.as_view(), name='load'),
-
-
     # path('download/', views.download, name='download'),
     
     # # Display path root for all sensor devices belong in each site/location

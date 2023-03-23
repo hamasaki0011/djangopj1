@@ -70,7 +70,7 @@ class Result(models.Model):
 
     def __str__(self):
         # return "("+ self.place.name + ")" + "センサー: " + self.point.device + " 日付・時間: " +  str(self.measured_at) + " 測定値: " + str(self.data_value)
-        return self.point.device + str(self.measured_value)  
+        return self.point.device + str(self.measured_value)+ " 日付・時間: " +  str(self.measured_date)  
 
     @admin.display(
         boolean=True,
