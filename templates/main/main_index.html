@@ -1,72 +1,51 @@
 {% extends 'main/main_base.html' %}
 
-{% block title %}Remote Monitoring System{% endblock %}
-
 {% block content %}
-<div class="container">
-    {% if request.user.is_authenticated %}
 
+<div class="container">
+    <br>
+    <h4>登録ユーザー: {{user.profile}}様のページ</h4>
+    <p>
+        <span>{{user.last_login}} ログイン成功</span>
+    </p>
+    <br>
+    <h4>■遠隔監視サイトを表示</h4>
+    <div>
+        {% for location in location_list %}
+        <h3>
+            <a class="form-control btn btn-info" href="{% url 'main:main_detail' location.pk %}">{{ location.name }}</a>
+        </h3>
+        <p>【Memo】{{ location.memo }}</p>
+        {% endfor %}    
+    </div>
+
+    {% if 'fujico@kfjc.co.jp' in user.email %}
     <br>
     <div>
-        <h4>■遠隔監視サイトを表示</h4>
-        <h6>遠隔監視サイトを選択してください。</h6>
-        <div>
-            {% for location in location_list %}
-            <h3>
-                <a class="form-control btn btn-info" href="{% url 'main:main_detail' location.pk %}">{{ location.name }}</a>
-            </h3>
-            <p>【Memo】{{ location.memo }}</p>
-            {% endfor %}    
-        </div>
-        <div>
-            <h4>■システム管理</h4>
-            <h5> 遠隔監視サイトを編集する</h5>
-            <h6>
-                <a class="form-control btn btn-danger" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-list"></span> サイトの一覧を表示</a>
-            </h6>
-            <h5> センサーの全体一覧を表示する</h5>
-            <h6>
-                <a class="form-control btn btn-warning" href="{% url 'main:sensors_list' %}"><span class="glyphicon glyphicon-list"></span> センサーの全体一覧を表示</a>
-            </h6>
-        </div>
-        <br>
-        <div>
-            <h4>■システム開発の記録</h4>
-            <h5>
-                <a  class="form-control btn btn-secondary" href="{% url 'record:record_article' %}"><span class="glyphicon glyphicon-book"></span> 関連する参考記事を閲覧</a>
-            </h5>
-        </div>
-        <div>
-            <h4>■CSVファイルをアップロード</h4>
-            <h5>
-                <a  class="form-control btn btn-secondary" href="{% url 'main:upload' %}"><span class="glyphicon glyphicon-book"></span>アップロード</a>
-            </h5>
-            
-        </div>
-        <br>
+        <h4>■システム管理者向け</h4>
+        <h5> センサーの全体一覧を表示する</h5>
+        <h6>
+            <a class="form-control btn btn-warning" href="{% url 'main:sensors_list' %}"><span class="glyphicon glyphicon-list"></span> センサーの全体一覧を表示</a>
+        </h6>
+        <h5> 遠隔監視サイトの設定を編集する</h5>
+        <h6>
+            <a class="form-control btn btn-secondary" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-list"></span> サイト情報を表示</a>
+        </h6>
+    </div>
+    <br>
+    <div>
+        <h4>■システム開発者向け</h4>
+        <h5>
+            <a  class="btn btn-default" href="{% url 'record:record_article' %}"><span class="glyphicon glyphicon-book"></span> 開発記録を閲覧する</a>
+            <a class="btn btn-default" href="{% url 'main:upload' %}"><span class="glyphicon glyphicon-pencil"></span>データファイルをアップロード</a>
+        </h5>
     </div>
 
     {% else %}
-    
-    <br>
-    <div>
-        <div class ='form-control'>
-            <h4>「ログイン」または「ユーザー登録」が必要です！</h4>
-        </div>
-        <br>
-        <div>
-            <h2>
-                <a class="form-control btn btn-primary" href="{% url 'account_login' %}"><span class="glyphicon glyphicon-list"></span>ログイン画面へ</a>
-            </h2>
-        </div>
-        <div>
-            <h2>
-                <a class="form-control btn btn-primary" href="{% url 'account_signup' %}"><span class="glyphicon glyphicon-list"></span>ユーザー登録画面へ</a>        
-            </h2>
-        </div>
-    </div>
 
-    {% endif %}        
+    {% endif%}
 </div>
+<br>
 
-{% endblock %}
+{% endblock %}>
+

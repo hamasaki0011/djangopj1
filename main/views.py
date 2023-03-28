@@ -3,17 +3,30 @@ from django.views import generic
 from django.urls import reverse_lazy
 from .models import Location,Sensors,Result
 from .forms import LocationForm,SensorsForm
+from accounts.models import User
 # ページへのアクセスをログインユーザーのみに制限する
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
+from django.contrib.auth import get_user, get_user_model
 from django.contrib import messages
 from django.utils import timezone
 import datetime
+# Chart drawing with Plotly
+import os
+import logging
+from main import addCsv
+from .forms import FileUploadForm
+# from .forms import UploadFileForm
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+# ajax trial
+from django.conf import settings
+from django.http import JsonResponse
+
 # import dateutil
 # from dateutil import tz
 # from dateutil.relativedelta import relativedelta
-
 # from django.http import Http404
-# from django.shortcuts import get_object_or_404, render
+# from django.shortcuts import get_object_or_404
 # from django.http import HttpResponseRedirect
 # from .application import data_rw
 # for CSV file uploading
@@ -29,22 +42,16 @@ import datetime
 # from watchdog.events import RegexMatchingEventHandler
 # from watchdog.events import LoggingEventHandler
 
-import os
-import logging
-from main import addCsv
-from .forms import FileUploadForm
-# from .forms import UploadFileForm
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-
 # directory to store the uploading files
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'static/uploads/')
 # Define debug log-file
 logger = logging.getLogger('development')
-COLOR=['darkturquoise','orange','green','red','blue','brown','violet','magenta','gray','black']  # ten colors
-
+# Color palette for chart drawing which pepared 10 colors
+COLOR=['darkturquoise','orange','green','red','blue','brown','violet','magenta','gray','black']
 # JST=tz.gettz('Asia/Tokyo')
 # UTC=tz.gettz("UTC")
+# User=get_user_model()
+COMPANY={'saga':'A株式会社','kumamoto':'株式会社B','fukuoka':'C株式会社'}
 
 class OwnerOnly(UserPassesTestMixin):
     def test_func(self):
@@ -55,13 +62,56 @@ class OwnerOnly(UserPassesTestMixin):
         messages.error(self.request,"You can edit and delete only for your's.")
         return redirect("main:location_detail", pk=self.kwargs["pk"])
 # -----------------------------------------------------------------
+def user_view(request):
+    user=request.user
+    
+    context={
+        'user':user
+    }
+    return render(request, 'main/main_user.html',context)
+# -----------------------------------------------------------------
+def other_view(request):
+    
+    # user=request.user    
+    users=User.objects.exclude(email=request.user)
+    context={
+        'users':users
+    }
+    return render(request, 'main/main_other.html',context)
+# -----------------------------------------------------------------
 # Top view, you can select a target site for remote monitoring
-class IndexView(generic.ListView):
+class IndexView(LoginRequiredMixin,generic.ListView):
     template_name='main/main_index.html'
     model=Location
-    # 2023.2.28　メモ
-    # ユーザー情報を取得して、そのキーでフィルターをかける
-    # クエリー取得を書く
+    
+    def get_queryset(self):
+        # ここに来た時点でuser情報は取得できている @2023.3.24
+        user=self.request.user
+        # ログインユーザーに許可されたQuery情報を渡す
+        if user.is_authenticated:
+            if('fujico@kfjc.co.jp' in user.email):
+                locations = Location.objects.all()
+            elif('@saga.com' in user.email):
+                locations = Location.objects.filter(name='株式会社A')
+            elif('@kumamoto.co.jp' in user.email):
+                locations = Location.objects.filter(name='B株式会社')
+            elif('@fukuoka.co.jp' in user.email):
+                locations = Location.objects.filter(name='C株式会社')
+        return locations
+
+    # Get user infromation
+    # def get_form_kwargs(self):
+    #     kwgs=super().get_form_kwargs()
+    #     kwgs["user"]=self.request.user    
+    #     return kwgs
+    
+    # def get(self,request,**kwargs):
+    #     context={
+    #         'user':self.request.user
+    #     }
+    #     return self.render_to_response(context)
+    
+    # user=AnonymousUser or authenticatedUser
 # -----------------------------------------------------------------
 # Chart drawing function
 def line_charts(x_data,y_data,start,points,legend):
@@ -166,15 +216,20 @@ def line_charts(x_data,y_data,start,points,legend):
         hovermode='closest',
         autosize=True,
         showlegend=True,
-        legend=dict(x=0.02,y=1.09,xanchor='left',yanchor='top',orientation='h',)
+        legend=dict(
+            x=0.02,
+            y=1.16,
+            xanchor='left',
+            yanchor='top',
+            orientation='h',
+        )
     )
     """_summary_ グラフ描画
-    左軸：温度[℃]、マーカー● と 右軸：温度以外(以下のところ圧力[Pa]を準備)、マーカー■の2軸描画
-    色分けが9色のみ、場合分けで20個まで描画可能
-    Returns:
+        左軸：温度[℃]、マーカー● と 右軸：温度以外(以下のところ圧力[Pa]を準備)、マーカー■の2軸描画
+        色分けが9色のみ、場合分けで20個まで描画可能
+        Returns:
         _type_: _description_
     """
-        
     for i in range(0,points):
         if(i<=9):
             # 温度 [℃]軸
@@ -205,17 +260,17 @@ def line_charts(x_data,y_data,start,points,legend):
                         x=x_data,
                         y=y_data[start-1+i],
                         # name='trace'+str(i+1),      
-                        name='右軸: '+str(legend[i]),        # legend table
+                        name='右軸: '+str(legend[i]),   # legend table
                         mode='lines+markers',
                         connectgaps=True,
                         line=dict(
-                            color=COLOR[i],         # color pallete
+                            color=COLOR[i],             # color pallete
                             width=2,
                         ),
                         line_dash='solid',
                         marker=dict(
                             symbol='square',
-                            color=COLOR[i],         # color pallet
+                            color=COLOR[i],             # color pallet
                             size=10,
                         ),   
                     ),
@@ -232,7 +287,7 @@ def line_charts(x_data,y_data,start,points,legend):
                         mode='lines+markers',
                         connectgaps=True,
                         line=dict(
-                            color=COLOR[i-10],      # color palette
+                        color=COLOR[i-10],      # color palette
                             width=2,
                         ),
                         line_dash="dot",
@@ -256,7 +311,7 @@ def line_charts(x_data,y_data,start,points,legend):
                         line=dict(
                             color=COLOR[i-10],      # color palette
                             width=2,
-                        ),
+                            ),
                         line_dash="dot",
                         marker=dict(
                             symbol='square',
@@ -265,17 +320,8 @@ def line_charts(x_data,y_data,start,points,legend):
                         ),
                     ),
                     secondary_y=True,
-                )   
-    # return fig.to_html(include_plotlyjs=False)
+                )          
     return fig.to_html(include_plotlyjs='cdn',full_html=False).encode().decode('unicode-escape')
-
-# class LineChartsView(generic.TemplateView):
-#     template_name="main/main_plot.html"
-    
-#     def get_context_data(self,**kwargs):
-#         context=super(LineChartsView,self).get_context_data(**kwargs)
-        
-#         return context
 # -----------------------------------------------------------------
 # Main detail view, List view for sensor devices at each site 
 class MainDetailView(generic.ListView):
@@ -289,6 +335,16 @@ class MainDetailView(generic.ListView):
         location=Location.objects.get(pk=id.pk)
         # Get queryset for Measured_data, result
         
+        # Horizontal point's number
+        latest=30
+        # Get sensor device point's number
+        sensor_list=Sensors.objects.filter(site_id=id.pk)
+        # Get the number of sensor device point's 
+        pointNum=len(sensor_list)
+        # Get the smallest number of the point_id
+        startPoint=sensor_list.order_by('id').first().id
+        
+        # Generate a graph data from sensor's measured_value   
         # Generate the table data including the device name and the most recent measured_data
         # recent_update=datetime.date(2023,2,27)
         # TD=9    # time deffernce
@@ -298,22 +354,25 @@ class MainDetailView(generic.ListView):
         start_date=today-datetime.timedelta(hours=12)
         results=Result.objects.all().filter(place_id=id.pk, created_date__range=(start_date,today))
         # results=Result.objects.all().filter(place_id=id.pk)
-        # First of drawing the chart, prepare the legend's list as legend
-        legend=[]
-        for result in results:
-            legend.append(result.point)  
+        if results.first() is None:
+            message="最新の測定データが取得できません"
+        else:
+            message="1分毎に更新(工事中は30分毎)"     
         
-        # Prepare the data for chart drawing
-        latest=30   # 30 minutes
-        # if devive number is required it is defined by numDevice
-        numDevice=15
-        # Prepare the array to memory the x_axis data as xdata[]
+        # Prepare the Legend' array    
+        legend=[]
+        # First of drawing the chart, prepare the legend's list as legend
+        for sensor in sensor_list:
+            legend.append(sensor.device)
+        # Prepare the xAxis data array            
         xdata=[]
-        n=latest
+        # Create the x_axis data
+        n=int(latest)
         while(n>=0):
             xdata.append(-n)
             n-=1
-        # Create y_Axis_data
+
+        # Create y_Axis data
         y_tmp=[[] for j in range(latest)]
         """ this means followings; 
             device0 : y_tmp[0][0] ~ y_tmp[0][29]
@@ -324,43 +383,27 @@ class MainDetailView(generic.ListView):
         # Prepare the array to memory the y_axis data as ydata[][]
         ydata=[[] for j in range(latest)]        
         data_list=Result.objects.all().filter(place_id=id.pk) 
-        # Get sensor device point's number
-        sensor_list=Sensors.objects.filter(site_id=id.pk)
-        # Get the number of sensor device point's 
-        pointNum=len(sensor_list)
-        # Get the smallest number of the point_id
-        startPoint=sensor_list.order_by('id').first().id
-        # Generate a graph data from sensor's measured_value
+
         for i in range(pointNum):
             # 課題：センサー番号がシリーズであることが前提のquery設定
             y_tmp[startPoint-1+i]=data_list.filter(point_id=startPoint+i).order_by('measured_date')[:latest]
 
             for data in y_tmp[startPoint-1+i]:
                 ydata[startPoint-1+i].append(data.measured_value)
-
-        """
-        'if' and 'for' Statements both do not form scopes in Python. 
-        Therefore, the variable if inside the sentence is the same as the variable outside.
-        Variables, 'start_at' and 'd_tmp' lator appeared are effective both inside and outside.
-        """
+        
+            """
+            'if' and 'for' Statements both do not form scopes in Python. 
+            Therefore, the variable if inside the sentence is the same as the variable outside.
+            Variables, 'start_at' and 'd_tmp' lator appeared are effective both inside and outside.
+            """
+        
         context={
-            # "pk":id.pk,
-            # "k":pointNum,
-            # "l":startPoint,
-            # "legend":legend,
-
+            # for confirmation
             # For the latest measured value table 
             "location":location,
             "results":results,
-            "sensor_list":sensor_list,
-
+            "message":message,
             # For chart drawing
-            # "x_data":xdata,
-            # "ydata0":ydata[startPoint-1],
-            # "ydata1":ydata[startPoint],
-            # "ydata2":ydata[startPoint+1],
-            # "ydata3":ydata[startPoint+2],
-            # "ydata":ydata,
             "plot":line_charts(xdata,ydata,startPoint,pointNum,legend), 
         }
         return render(request, "main/main_detail.html", context)
@@ -652,7 +695,8 @@ class Upload(generic.FormView):
     
     def get_form_kwargs(self):
         # set prefix of correct csv file's name into valiables
-        valiables='test'    # valiable to pass to form
+        # Pass valiable to form
+        valiables='test'    
         kwargs=super(Upload,self).get_form_kwargs()
         kwargs.update({'valiables':valiables})
         return kwargs
@@ -667,7 +711,8 @@ class Upload(generic.FormView):
 
     def form_valid(self, form):
         handle_uploaded_file(self.request.FILES['file'])
-        return redirect('main:upload_complete')  # to redirect to upload complete view
+        # Redirect to upload complete view
+        return redirect('main:upload_complete')  
 """
 Another way
 def upload(request):
@@ -748,3 +793,14 @@ def upload_complete(request):
 #         return HttpResponse(data)
 #         # writeの場合のリターン
 #         #return HttpResponse()
+# -----------------------------------------------------------------
+def ajax_number(request):
+    number1 = int(request.POST.get('number1'))
+    number2 = int(request.POST.get('number2'))
+    plus = number1 + number2
+    minus = number1 - number2
+    d = {
+        'plus': plus,
+        'minus': minus,
+    }
+    return JsonResponse(d)

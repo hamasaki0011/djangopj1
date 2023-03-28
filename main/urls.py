@@ -6,8 +6,11 @@ app_name='main'
 urlpatterns=[
     # Top index view
     path('', views.IndexView.as_view(), name='main_index'),
+    path('user/', views.user_view, name='main_user'),
+    path('other/', views.other_view, name='main_other'),
     # Main detail view
     path('detail/<int:pk>/', views.MainDetailView.as_view(), name='main_detail'),
+    path('user/', views.MainDetailView.as_view(), name='main_user'),
     # Location list view
     path('location/list', views.LocationListView.as_view(), name='location_list'),
     # Location list view
@@ -41,6 +44,8 @@ urlpatterns=[
     # path('upload/complete/', views.upload_complete, name='upload_complete'),
     # path('load/', views.Load.as_view(), name='load'),
     # path('download/', views.download, name='download'),
+    
+    path('ajax_number/', views.ajax_number, name='ajax_number'),
     
     # # Display path root for all sensor devices belong in each site/location
     # path('sensor/device/list/<int:pk>/', views.SensorDeviceListView.as_view(), name='sensor_device_list'),

@@ -73,7 +73,7 @@ class User(AbstractBaseUser):
 class Profile(models.Model):      
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=100, verbose_name="ユーザー名")
-    company = models.CharField(max_length=100, blank=True, null=True, verbose_name="会社名")
+    belongs = models.CharField(max_length=100, blank=True, null=True, verbose_name="会社名")
     phone_number = models.IntegerField(blank=True, null=True, verbose_name="連絡先")
 
     def __str__(self):
