@@ -8,7 +8,7 @@ from accounts.models import Profile
 class CustomAdminChangeForm(UserChangeForm):
 #Profileクラスのフィールドを追記します
     username = forms.CharField(max_length=100)
-    company = forms.CharField(max_length=100, required=False)
+    belongs = forms.CharField(max_length=100, required=False)
     phone_number = forms.IntegerField(required=False) 
 
     class Meta:
@@ -21,7 +21,7 @@ class CustomAdminChangeForm(UserChangeForm):
         if hasattr(user_obj, "profile"):
             profile_obj = user_obj.profile
             self.base_fields["username"].initial = profile_obj.username
-            self.base_fields["company"].initial = profile_obj.company
+            self.base_fields["belongs"].initial = profile_obj.company
             self.base_fields["phone_number"].initial = profile_obj.phone_number
         super().__init__(*args, **kwargs)
 
@@ -29,7 +29,7 @@ class CustomAdminChangeForm(UserChangeForm):
     def save(self, commit=True):
         user_obj = super().save(commit=False)
         username = self.cleaned_data.get("username")
-        company = self.cleaned_data.get("company")
+        belongs = self.cleaned_data.get("belongs")
         phone_number = self.cleaned_data.get("phone_number")
         if hasattr(user_obj, "profile"):
             profile_obj = user_obj.profile
@@ -37,8 +37,8 @@ class CustomAdminChangeForm(UserChangeForm):
             profile_obj = Profile(user=user_obj)
         if username is not None:
             profile_obj.username = username
-        if company is not None:
-            profile_obj.company = company
+        if belongs is not None:
+            profile_obj.belongs = belongs
         if phone_number is not None:
             profile_obj.phone_number = phone_number
         profile_obj.save()
