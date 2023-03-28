@@ -27,7 +27,7 @@ class UserAdmin(BaseUserAdmin):
         # プロフィールフォームを追加
         ('プロフィール', {'fields':(
             'username',
-            'company',
+            'bolongs',
             'phone_number',
         )}),
         ('Permissions', {'fields': ('staff','admin',)}),

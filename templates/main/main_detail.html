@@ -40,6 +40,8 @@
         // ページをreloadする:reloadの基本的な使い方
         function doReload() {
             // reloadメソッドによりページをリロード
+            // reloadの引数にfalseを指定してキャッシュを利用して再描画する
+            // ただし、キャッシュがある場合
             window.location.reload(false);
         }
         window.addEventListener('load', function () {

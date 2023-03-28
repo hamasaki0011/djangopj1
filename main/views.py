@@ -104,13 +104,6 @@ class IndexView(LoginRequiredMixin,generic.ListView):
     #     kwgs=super().get_form_kwargs()
     #     kwgs["user"]=self.request.user    
     #     return kwgs
-    
-    # def get(self,request,**kwargs):
-    #     context={
-    #         'user':self.request.user
-    #     }
-    #     return self.render_to_response(context)
-    
     # user=AnonymousUser or authenticatedUser
 # -----------------------------------------------------------------
 # Chart drawing function
