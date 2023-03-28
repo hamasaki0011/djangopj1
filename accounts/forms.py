@@ -21,7 +21,7 @@ class CustomAdminChangeForm(UserChangeForm):
         if hasattr(user_obj, "profile"):
             profile_obj = user_obj.profile
             self.base_fields["username"].initial = profile_obj.username
-            self.base_fields["belongs"].initial = profile_obj.company
+            self.base_fields["belongs"].initial = profile_obj.belongs
             self.base_fields["phone_number"].initial = profile_obj.phone_number
         super().__init__(*args, **kwargs)
 
