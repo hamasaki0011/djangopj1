@@ -3,6 +3,7 @@ from .models import Location,Sensors,Result
 import os
 # import io, csv
 from django.core.exceptions import ValidationError
+
 VALID_EXTENSIONS=['.csv']
 
 # Location model form
@@ -62,6 +63,7 @@ class SensorsForm(forms.ModelForm):
     #     if commit:
     #         sensors_obj.save()
     #     return sensors_obj
+    
 class SensorsFormClass(forms.Form):
     name = forms.CharField()
     memo = forms.CharField(widget=forms.Textarea())
@@ -74,21 +76,15 @@ class ResultForm(forms.ModelForm):
             'place','point', 'measured_date', 'measured_value',
         )
 
-
-# class UploadFileForm(forms.Form):
-#     file = forms.FileField(
-#         label='アップロードするファイルを選択'
-#     )
-    
-# # 2022/11/8 generate a button for CSV file uploading
+# 2022/11/8 generate a button for CSV file uploading
 class FileUploadForm(forms.Form):  
     file = forms.FileField(
         label='アップロードするファイルを選択'
     )
 
-    # receive the valiables which passed by views
+    # receive the variables which passed by views
     def __init__(self, *args, **kwargs):
-        self.valiables=kwargs.pop('valiables',None) # get valiables
+        self.variables=kwargs.pop('variables',None) # get variables
         super(FileUploadForm, self).__init__(*args,**kwargs)
 
     # Add file validation feature at 2022/11/11 
@@ -99,5 +95,5 @@ class FileUploadForm(forms.Form):
         if not extension.lower() in VALID_EXTENSIONS:
             raise forms.ValidationError('csvファイルを選択して下さい')
         # is it correct csv file or not?
-        if not file.name.startswith(self.valiables):
-            raise forms.ValidationError('間違った名前のcsvファイルです。''（'+ self.valiables + 'で始まるcsvファイルを選択してください。）')
+        if not file.name.startswith(self.variables):
+            raise forms.ValidationError('間違った名前のcsvファイルです。''（'+ self.variables + 'で始まるcsvファイルを選択してください。）')

@@ -24,10 +24,8 @@
     <div>
         <h4>■システム管理者向け</h4>
         <h6>
-            <a class="btn btn-secondary" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-list"></span>①遠隔監視サイトの設定を編集する</a>
-        </h6>
-        <h6>
-            <a class="btn btn-secondary" href="{% url 'main:sensors_list' %}"><span class="glyphicon glyphicon-list"></span>②センサー設定ポイントを編集する</a>
+            <a class="btn btn-warning" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-list"></span>①遠隔監視サイトの設定を編集する</a>
+            <a class="btn btn-warning" href="{% url 'main:sensors_list' %}"><span class="glyphicon glyphicon-list"></span>②センサー設定ポイントを編集する</a>
         </h6>
 
     </div>
@@ -35,11 +33,16 @@
     <div>
         <h4>■システム開発者向け</h4>
         <h5>
-            <a  class="btn btn-default" href="{% url 'record:record_article' %}"><span class="glyphicon glyphicon-book"></span> 開発記録を閲覧する</a>
+            <a  class="btn btn-secondary" href="https://github.com/hamasaki0011/projects.git"><span class="glyphicon glyphicon-book"></span> プログラムソースを参照する</a>
+            <a  class="btn btn-secondary" href="{% url 'record:record_list' %}"><span class="glyphicon glyphicon-book"></span> 開発記録を閲覧する</a>
+            <a  class="btn btn-secondary" href="{% url 'record:record_article' %}"><span class="glyphicon glyphicon-book"></span> 開発関係情報を閲覧する</a>     
+        </h5>
+        <h5>
             <a class="btn btn-default" href="{% url 'main:upload' %}"><span class="glyphicon glyphicon-pencil"></span>データファイルをアップロード</a>
         </h5>
-    </div>
+        <p>※グラフ描画機能確認用</p>
 
+    </div>
     {% else %}
 
     {% endif%}

@@ -344,7 +344,7 @@ class MainDetailView(generic.ListView):
         # today = datetime.datetime.now() + datetime.timedelta(hours=TD)
         # 注意：最終的にはtimedeltaで1分前のデータを表示するように調整する
         today = datetime.datetime.now()
-        start_date=today-datetime.timedelta(hours=1)
+        start_date=today-datetime.timedelta(hours=4)
         results=Result.objects.all().filter(place_id=id.pk, created_date__range=(start_date,today))
         # results=Result.objects.all().filter(place_id=id.pk)
         if results.first() is None:
@@ -671,14 +671,20 @@ class SensorsDeleteView(generic.DeleteView):
 def handle_uploaded_file(f):
     path = os.path.join(UPLOAD_DIR, f.name)
     with open(path, 'wb+') as destination:
+        """ 'w': 書込み用でファイルを開く
+            ファイル名に指定したものがすでに存在する場合は上書き
+            'b': バイナリーモードで開く
+            '+': 更新のためディスクファイルを開く
+            他に、'Y': 読み込み用、'X': 新規ファイルの書き込み用
+            'a': 書込み用で開く、すでに存在している場合末行に追加書込み
+        """
         for chunk in f.chunks():
             destination.write(chunk)
     try:
         addCsv.insert_csv_data(path)        # register the contents of csv file' to DB
-        # writeCsv.insert_csv_data(path)    # register the csv file' data to DB
     except Exception as exc:
         logger.error(exc)
-    # Delete the apploading completed file
+    # Delete the apploaded file
     os.remove(path)                         
 # -----------------------------------------------------------------
 # CSV file uploading
@@ -687,11 +693,11 @@ class Upload(generic.FormView):
     form_class = FileUploadForm
     
     def get_form_kwargs(self):
-        # set prefix of correct csv file's name into valiables
-        # Pass valiable to form
-        valiables='test'    
+        # set prefix of correct csv file's name into variables
+        # Pass variable to form
+        variables='test'    
         kwargs=super(Upload,self).get_form_kwargs()
-        kwargs.update({'valiables':valiables})
+        kwargs.update({'variables':variables})
         return kwargs
 
     def get_context_data(self, **kwargs):

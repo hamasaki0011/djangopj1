@@ -7,7 +7,7 @@ logger=logging.getLogger('development')
 
 # SQL for adding the data
 sql_insert=("insert into result (measured_date, measured_value, point_id, place_id, created_date, updated_date) "
-              "select * from (select%s as measured_date, %s as measured_value, %s as point_id, %s as place_id,"
+              "select * from (select %s as measured_date, %s as measured_value, %s as point_id, %s as place_id,"
               "%s as created_date, %s as updated_date) as tmp "
               "where not exists (select * from result where point_id = %s and measured_date = %s)")
 
@@ -24,12 +24,18 @@ def regist_data(cursor,file_path):
             reader=csv.reader(file)
             header=next(reader) # skip header line
 
-            """ tuple's format of add_data
+            """ tuple format of add_data
             [0,             ,1              ,2          ,3]  
-            [measure_date, measured_value, point_id, place_id """
+            [measure_date, measured_value, point_id, place_id
+            point_id is referenced to sensors.id
+            """
             for row in reader:
                 str_time=[dt.now().strftime('%Y-%m-%d %H:%M:%S')]
                 add_data=[]
+                """ .append(): 末尾に要素を追加
+                    .extend(): 末尾に連結する、別のリストやタプル
+                    .insert(): 指定位置に要素を挿入する
+                """
                 # extend array "add_data" and add the read data from csv file
                 add_data.extend(row)        
                 add_data.extend(str_time)   # add created_date area
