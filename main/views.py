@@ -393,6 +393,8 @@ class MainDetailView(generic.ListView):
         context={
             # for confirmation
             "ydata":ydata,
+            "start_point":startPoint,
+            "point_num":pointNum,
             # For the latest measured value table 
             "location":location,
             "results":results,
