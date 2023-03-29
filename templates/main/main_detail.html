@@ -33,6 +33,10 @@
 </div>
 <br>
 <div class="container">
+    <p>ydata: {{ ydata }}</p>
+    <p>start point: {{start_point}}</p>
+</div>
+<div class="container">
     <!-- <h5 align="center">直近30分間のデータ推移</h5> -->
     <!-- ここにグラフを描画する -->
     <div class="graph">{{plot|safe}}</div>
@@ -49,12 +53,6 @@
             setTimeout(doReload, 30000);
         });
     </script>
-</div>
-<div class="container">
-    <p>ydata: {{ ydata }}</p>
-    <p>start point: {{start_point}}</p>
-    <p>point数: {{point_num}}</p>
-    
 </div>
 <br>
 <div class="container">
