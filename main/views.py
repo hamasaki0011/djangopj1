@@ -344,7 +344,7 @@ class MainDetailView(generic.ListView):
         # today = datetime.datetime.now() + datetime.timedelta(hours=TD)
         # 注意：最終的にはtimedeltaで1分前のデータを表示するように調整する
         today = datetime.datetime.now()
-        start_date=today-datetime.timedelta(hours=4)
+        start_date=today-datetime.timedelta(hours=1)
         results=Result.objects.all().filter(place_id=id.pk, created_date__range=(start_date,today))
         # results=Result.objects.all().filter(place_id=id.pk)
         if results.first() is None:
@@ -392,9 +392,6 @@ class MainDetailView(generic.ListView):
         
         context={
             # for confirmation
-            "sensors":sensor_list,
-            "ydata":ydata,
-            "start_point":startPoint,
             # For the latest measured value table 
             "location":location,
             "results":results,
