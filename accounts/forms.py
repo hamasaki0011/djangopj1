@@ -57,7 +57,7 @@ class ProfileUpdateForm(forms.ModelForm):
         if username == user_email:
             raise forms.ValidationError("ユーザー名を変更してください")
         else:
-            # 2023.2.27 いつか見直しが必要です
+            # 2023.2.27 これだけで十分？いつか見直す?
             if "@" in username and ".com" in username:
                 raise forms.ValidationError("ユーザー名にEメールアドレスは使用できません")
             elif "@" in username and ".co.jp" in username:
