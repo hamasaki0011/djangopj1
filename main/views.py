@@ -392,6 +392,7 @@ class MainDetailView(generic.ListView):
         
         context={
             # for confirmation
+            "sensors":sensor_list,
             "ydata":ydata,
             "start_point":startPoint,
             # For the latest measured value table 
