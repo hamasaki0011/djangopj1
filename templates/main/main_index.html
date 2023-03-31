@@ -18,7 +18,7 @@
         <p>【Memo】{{ location.memo }}</p>
         {% endfor %}    
     </div>
-
+    <!-- ここにユーザー情報の編集画面をいれたいのですが、、 -->
     {% if 'fujico@kfjc.co.jp' in user.email %}
     <br>
     <div>
@@ -27,7 +27,6 @@
             <a class="btn btn-warning" href="{% url 'main:location_list' %}"><span class="glyphicon glyphicon-list"></span>①遠隔監視サイトの設定を編集する</a>
             <a class="btn btn-warning" href="{% url 'main:sensors_list' %}"><span class="glyphicon glyphicon-list"></span>②センサー設定ポイントを編集する</a>
         </h6>
-
     </div>
     <br>
     <div>
@@ -41,13 +40,11 @@
             <a class="btn btn-default" href="{% url 'main:upload' %}"><span class="glyphicon glyphicon-pencil"></span>データファイルをアップロード</a>
         </h5>
         <p>※グラフ描画機能確認用</p>
-
     </div>
     {% else %}
 
     {% endif%}
 </div>
 <br>
-
 {% endblock %}>
 

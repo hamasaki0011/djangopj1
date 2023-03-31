@@ -9,9 +9,8 @@
 
 {% block content %}
 <div class="allauth_container">
-
-{% get_providers as socialaccount_providers %}
-
+<!-- social accountによるログインはサポートしない -->
+<!-- {% get_providers as socialaccount_providers %}
 {% if socialaccount_providers %}
 <p>{% blocktrans with site.name as site_name %}Please sign in with one
 of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
@@ -25,7 +24,7 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
 </div>
 {% include "socialaccount/snippets/login_extra.html" %}
 {% else %}
-{% endif %}
+{% endif %} -->
     
 <form class="login allauth_form" method="POST" action="{% url 'account_login' %}">
     {% csrf_token %}
@@ -36,10 +35,10 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
     {% endif %}    
     
     <button class="primaryAction btn btn-primary my-3" type="submit">{% trans "Sign In" %}</button>
-    <a class="button secondaryAction" href="{% url 'account_reset_password' %}">
+    <!-- <a class="button secondaryAction" href="{% url 'account_reset_password' %}">
         <span>{% trans "Forgot Password?" %} </span><span>(工事中)</span>
-    </a>
-    <p>ユーザー登録は <a href="{{ signup_url }}">こちら</a>(工事中：サポート未定)<p>
+    </a> -->
+    <!-- <p>ユーザー登録は <a href="{{ signup_url }}">こちら</a>(工事中：サポート未定)<p> -->
 </form>
 </div>
 {% endblock %}

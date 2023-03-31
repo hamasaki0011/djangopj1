@@ -46,12 +46,11 @@ from django.http import JsonResponse
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'static/uploads/')
 # Define debug log-file
 logger = logging.getLogger('development')
+# logger = logging.getLogger(__name__)
+
 # Color palette for chart drawing which pepared 10 colors
 COLOR=['darkturquoise','orange','green','red','blue','brown','violet','magenta','gray','black']
-# JST=tz.gettz('Asia/Tokyo')
-# UTC=tz.gettz("UTC")
-# User=get_user_model()
-COMPANY={'saga':'A株式会社','kumamoto':'株式会社B','fukuoka':'C株式会社'}
+# COMPANY={'saga':'A株式会社','kumamoto':'株式会社B','fukuoka':'C株式会社',}
 
 class OwnerOnly(UserPassesTestMixin):
     def test_func(self):
@@ -61,14 +60,6 @@ class OwnerOnly(UserPassesTestMixin):
     def handle_no_permission(self):
         messages.error(self.request,"You can edit and delete only for your's.")
         return redirect("main:location_detail", pk=self.kwargs["pk"])
-# -----------------------------------------------------------------
-def user_view(request):
-    user=request.user
-    
-    context={
-        'user':user
-    }
-    return render(request, 'main/main_user.html',context)
 # -----------------------------------------------------------------
 def other_view(request):
     
@@ -91,12 +82,8 @@ class IndexView(LoginRequiredMixin,generic.ListView):
         if user.is_authenticated:
             if('fujico@kfjc.co.jp' in user.email):
                 locations = Location.objects.all()
-            elif('@saga.com' in user.email):
-                locations = Location.objects.filter(name='株式会社A')
-            elif('@kumamoto.co.jp' in user.email):
-                locations = Location.objects.filter(name='B株式会社')
-            elif('@fukuoka.co.jp' in user.email):
-                locations = Location.objects.filter(name='C株式会社')
+            else:
+                locations = Location.objects.filter(name=user.profile.belongs)
         return locations
 
     # Get user infromation

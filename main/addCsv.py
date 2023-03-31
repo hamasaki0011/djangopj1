@@ -47,7 +47,7 @@ def regist_data(cursor,file_path):
                 # addd the record
                 cursor.execute(sql_insert,add_data)
 
-            logger.info("=== End DB登録 ===")
+            logger.info("=== End DB登録 < ===")
 
 # Register the data in csv file to DataBase
 def insert_csv_data(file_path):
