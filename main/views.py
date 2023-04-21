@@ -654,7 +654,7 @@ class SensorsDeleteView(generic.DeleteView):
 #     #     raise Http404("SensorDevice does not exist")
 #     # return render(request, 'sensor/detail.html', {'device': device })
 # -----------------------------------------------------------------
-# hundling the uploading file
+# handling the uploading file
 def handle_uploaded_file(f):
     path = os.path.join(UPLOAD_DIR, f.name)
     with open(path, 'wb+') as destination:
