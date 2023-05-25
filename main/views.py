@@ -353,6 +353,7 @@ class MainDetailView(generic.ListView):
             n-=1
 
         # Create y_Axis data
+        #2023.5.8 try it lator y_tmp=[[]*latest for j in range(6)]
         y_tmp=[[] for j in range(latest)]
         """ this means followings; 
             device0 : y_tmp[0][0] ~ y_tmp[0][29]
