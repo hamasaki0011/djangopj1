@@ -4,6 +4,7 @@
 __pycache__
 # Environments
 .myenv/
+.venv
 auth/.env
 
 # Django stuff:
