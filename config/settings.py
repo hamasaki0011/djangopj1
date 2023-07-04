@@ -66,7 +66,8 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
+        'DIRS': [BASE_DIR / 'templates'],
+        #'DIRS': [os.path.join(BASE_DIR, 'templates'),],
         # 'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -118,23 +119,19 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'ja'
-
 TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = False
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-#STATICFILES_DIRS=[BASE_DIR / 'static_local']
+STATICFILES_DIRS=[BASE_DIR / 'staticfiles']
 #STATIC_ROOT=os.path.join(BASE_DIR,'static')
-STATIC_ROOT= BASE_DIR / 'staticfiles'
+#STATIC_ROOT= BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "mediafiles"
