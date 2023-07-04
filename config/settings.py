@@ -132,10 +132,12 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS=[BASE_DIR / 'static_local']
-STATIC_ROOT=os.path.join(BASE_DIR,'static')
+#STATICFILES_DIRS=[BASE_DIR / 'static_local']
+#STATIC_ROOT=os.path.join(BASE_DIR,'static')
+STATIC_ROOT= BASE_DIR / 'staticfiles'
+
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / "media_local"
+MEDIA_ROOT = BASE_DIR / "mediafiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -231,10 +233,5 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 #         },
 #     }
 # }
-
-if not DEBUG:
-    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
-    STATIC_ROOT = 'usr/share/nginx/html/static'
-    MEDIA_ROOT = 'usr/share/nginx/html/media'
     
 
