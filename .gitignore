@@ -3,12 +3,11 @@
 /.vscode
 __pycache__
 # Environments
+.myenv /
 env/
 
 # Django stuff:
-db.sqlite3
-settings_local.py
+#db.sqlite3
 
-/static
 .DS_Store
 projects.code-workspace
