@@ -9,27 +9,25 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-#23.7.4 import environ
 import os
 from pathlib import Path
-
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+#PARENT_DIR = BASE_DIR.parent
+env_path = BASE_DIR / "auth/.env"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# Setting the environ
-#23.7.4 env = environ.Env()
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)--oqy25z!@%!dy+mos(jf^f5s_nv)l%3jm8vkp@0un8)s_^qt'
-
+load_dotenv(env_path)
+SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
-# ALLOWED_HOSTS = ['hamasaki.pythonanywhere.com']
+ALLOWED_HOSTS =  os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # Application definitiongit 
 

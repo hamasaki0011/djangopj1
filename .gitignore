@@ -4,6 +4,7 @@
 __pycache__
 # Environments
 .myenv/
+auth/.env
 
 # Django stuff:
 db.sqlite3
