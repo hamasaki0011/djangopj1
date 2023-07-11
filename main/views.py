@@ -35,7 +35,7 @@ from django.http import JsonResponse
 # from sensor.forms import FileUploadForm
 # import numpy as np
 # from sensor import writeCsv
-# embeded watchdog module
+# embedded watchdog module
 # import sys
 # import time
 # from watchdog.observers import Observer
@@ -48,7 +48,7 @@ UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'static/uploads/')
 logger = logging.getLogger('development')
 # logger = logging.getLogger(__name__)
 
-# Color palette for chart drawing which pepared 10 colors
+# Color palette for chart drawing which prepared 10 colors
 COLOR=['darkturquoise','orange','green','red','blue','brown','violet','magenta','gray','black']
 # COMPANY={'saga':'A株式会社','kumamoto':'株式会社B','fukuoka':'C株式会社',}
 
@@ -59,7 +59,7 @@ class OwnerOnly(UserPassesTestMixin):
     
     def handle_no_permission(self):
         messages.error(self.request,"You can edit and delete only for your's.")
-        return redirect("main:location_detail", pk=self.kwargs["pk"])
+        return redirect("main:location_detail", pk=self.kwargs["pk"]) 
 # -----------------------------------------------------------------
 def other_view(request):
     
