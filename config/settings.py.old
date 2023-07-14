@@ -30,7 +30,6 @@ DEBUG = True
 ALLOWED_HOSTS =  os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # Application definitiongit 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

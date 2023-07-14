@@ -26,6 +26,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('', include('main.urls')),
     path('record/', include('record.urls')),
+    path('devolution/', include('devolution.urls')),
 ]
 
 if settings.DEBUG:

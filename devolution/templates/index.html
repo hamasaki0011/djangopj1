@@ -1,0 +1,42 @@
+{% extends 'main/main_base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>遠隔監視ステム仕様書(工事中)</h1>
+</div>
+<div class="container">
+    <div>
+        <h3>■HttpRequestメソッド確認用</h3>
+        <form action="/devolution/" method="post">
+            {% csrf_token %}
+            <div>
+                <label for="name">名前</label>
+                <input type="text" id="name" name="name">
+            </div>
+            <div>
+                <label for="email">メールアドレス</label>
+                <input type="mail" id="email" name="email">
+            </div>
+            <div>
+                <label for="message">内容</label>
+                <textarea id="message" name="message">{{ message }}</textarea>
+            </div>
+            <div>
+                <input type="submit" value="送信する">
+            </div>
+        </form>
+        <br>
+        <div>
+            <p><a class="btn btn-default" href="{% url 'main:upload' %}"><span class="glyphicon glyphicon-pencil"></span>データファイルをアップロード</a></p>
+            <p>※グラフ描画機能確認用</p>
+        </div> 
+    </div>
+</div>
+<br>
+<div class="container">
+    <h3>■参考資料</h3>
+    <a  class="btn btn-secondary" href="{% url 'record:record_article' %}"><span class="glyphicon glyphicon-book"></span> 開発関係情報を閲覧する</a>
+    <a  class="btn btn-secondary" href="https://github.com/hamasaki0011/djangopj1.git" target="_blank" rel="noopener noreferrer"><span class="glyphicon glyphicon-book"></span> Djangoアプリ(プログラムソース)</a>
+</div>
+<br>    
+{% endblock %}

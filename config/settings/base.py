@@ -31,7 +31,6 @@ DEBUG = True
 ALLOWED_HOSTS =  os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # Application definitiongit 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,6 +46,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',  # Forgetting this was probably your error
     'main.apps.MainConfig',
     'record.apps.RecordConfig',
+    'devolution.apps.DevolutionConfig',
     "accounts",
 ]
 
@@ -65,9 +65,11 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [
+            BASE_DIR / 'templates',
+            BASE_DIR / 'devolution/templates'
+        ],
         #'DIRS': [os.path.join(BASE_DIR, 'templates'),],
-        # 'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
