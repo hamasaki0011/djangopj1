@@ -1,9 +1,15 @@
-{% extends 'main/main_base.html' %}
+{% extends 'devolution/base.html' %}
 
 {% block content %}
+
 <div class="container">
-    <h1>遠隔監視ステム仕様書(工事中)</h1>
+    <h2>はじめに</h2>
+    <h2>目次</h2>
+    <form>
+        <a class="btn btn-default" href="{% url 'devolution:index' %}"><span class="glyphicon glyphicon-list"></span>目次に戻る</a>
+    </form>
 </div>
+<br>
 <div class="container">
     <div>
         <h3>■HttpRequestメソッド確認用</h3>
@@ -21,14 +27,22 @@
                 <label for="message">内容</label>
                 <textarea id="message" name="message">{{ message }}</textarea>
             </div>
-            <div>
-                <input type="submit" value="送信する">
-            </div>
-        </form>
+            <a>
+                <form action="/devolution/" method="get">
+                    {% csrf_token %}
+                    <input type="submit" value="POST送信する">
+                </form>
+            </a>
+            <a>
+                <form action="/devolution/" method="get">
+                    {% csrf_token %}
+                    <input type="submit" value="GET送信する">
+                </form>
+            </a>
         <br>
+        <h3>■グラフ描画確認用</h3>
         <div>
             <p><a class="btn btn-default" href="{% url 'main:upload' %}"><span class="glyphicon glyphicon-pencil"></span>データファイルをアップロード</a></p>
-            <p>※グラフ描画機能確認用</p>
         </div> 
     </div>
 </div>

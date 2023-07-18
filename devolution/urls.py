@@ -3,7 +3,7 @@ from . import views
 
 app_name='devolution'
 urlpatterns = [
-    path('devolution/', views.DevolutionIndexView.as_view(), name='devolution_index'),
+    path('', views.IndexView.as_view(), name='index'),
     #path('detail/<int:pk>/', views.RecordDetailView.as_view(), name='record_detail'),
     #path('update/<int:pk>/', views.RecordUpdateView.as_view(), name='record_update'),
     #path('create/', views.RecordCreateView.as_view(), name='record_create'),

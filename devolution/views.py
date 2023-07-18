@@ -6,21 +6,22 @@ from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 
 # Top-view of devolution, select configuration items
-#@csrf_exempt
-class DevolutionIndexView(generic.TemplateView):
-    template_name='devolution/devolution_index.html'
 
-    #@csrf_exempt
+class IndexView(generic.TemplateView):
+    template_name='devolution/index.html'
+
     def get(self, request, *args, **kwargs):
         context = {
             'message': "Hello World! from View!!",
         }
-        return render(request, 'devolution/devolution_index.html', context)
+        return render(request, 'devolution/index.html', context)
 
+    # @csrf_exempt
     def post(self, request, *args, **kwargs):
         context = {
             'message': "POST method OK!!",
         }
-        return render(request, 'devolution/devolution_index.html', context)
+        return render(request, 'devolution/index.html', context)
+    
 
     
