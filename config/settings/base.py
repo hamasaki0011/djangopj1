@@ -143,9 +143,9 @@ MEDIA_ROOT = BASE_DIR / "mediafiles"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Set-up the allauth
-AUTHENTICATION_BACKENDS = [ 
-  'django.contrib.auth.backends.ModelBackend',     
-  'allauth.account.auth_backends.AuthenticationBackend',
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ] 
 
 SITE_ID = 1
